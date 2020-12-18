@@ -1,2 +1,2 @@
-# Personal-Projects
-Consist personal projects for self-development
+# Projects
+Consist all of the projects for self-practice
