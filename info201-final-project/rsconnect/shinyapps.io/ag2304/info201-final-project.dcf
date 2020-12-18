@@ -1,0 +1,13 @@
+name: info201-final-project
+title: info201-final-project
+username:
+account: ag2304
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 351888
+bundleId: 1403115
+url: https://ag2304.shinyapps.io/info201-final-project/
+when: 1527788965.51793
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|conclusion.md|intro.md|LICENSE|README.md|data/arrests_national_adults.csv|data/arrests_national_juvenile.csv|data/arrests_national.csv|data/estimated_crimes.csv
