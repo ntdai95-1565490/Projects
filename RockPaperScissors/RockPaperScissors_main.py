@@ -1,5 +1,5 @@
 # Importing the the game file where the actual game_result() function is located
-import problem1_game
+import RockPaperScissors_game
 
 # For the main() function in the PlayAgain class below
 class PlayAgain:
@@ -28,7 +28,7 @@ class Main:
             user_object = input("Please, chooose between rock, paper, and scissors: ").lower()
             # Passing the user input variable above to the imported function of game_result from the file problem1_game.py to see the 
             # result
-            instance_of_GamePlay = problem1_game.GamePlay()
+            instance_of_GamePlay = RockPaperScissors_game.GamePlay()
             result = instance_of_GamePlay.game_result(user_object)
             # Print out the result, so that the user can see it
             print(result)
