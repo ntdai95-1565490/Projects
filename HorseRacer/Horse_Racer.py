@@ -1,3 +1,13 @@
+# The program uses third-party icons, which are credited to:
+
+# <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+# <div>Icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+# <div>Icons made by <a href="https://www.flaticon.com/authors/flat-icons" title="Flat Icons">Flat Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+# <div>Icons made by <a href="https://www.flaticon.com/authors/ultimatearm" title="ultimatearm">ultimatearm</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+# The creator of the following program does not own any of the icons used below. All of the copyrights of the icons below belongs to the 
+# creators mentioned above.
+
 import pygame
 import random
 import math
@@ -169,7 +179,7 @@ def game_loop():
     # Octopus
     global octopus_image
     octopus_image = pygame.image.load('kraken.png')
-    octopus_x = 1300
+    octopus_x = 1200
     octopus_y = 300
     octopus_y_change = -5
     octopus_life_point = 5
