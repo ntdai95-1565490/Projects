@@ -11,7 +11,6 @@
 import pygame
 import random
 import math
-import time
 
 # Initializing the game
 pygame.init()
