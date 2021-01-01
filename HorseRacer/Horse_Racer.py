@@ -114,7 +114,7 @@ def game_loop():
     # Background
     background = pygame.image.load("background.png")
     # Caption and Icon
-    icon = pygame.image.load("race-horse.png")
+    icon = pygame.image.load("horse_icon.png")
     pygame.display.set_caption("Horse Racer")
     pygame.display.set_icon(icon)
 
@@ -154,7 +154,7 @@ def game_loop():
 
     # Arrow
     global arrow_image
-    arrow_image = pygame.image.load('bow-and-arrow.png')
+    arrow_image = pygame.image.load('arrow.png')
     arrow_x = 0
     arrow_y = 0
     arrow_x_change = 15
@@ -170,14 +170,14 @@ def game_loop():
 
     # Fire
     global fire_image
-    fire_image = pygame.image.load('santelmo.png')
+    fire_image = pygame.image.load('fire.png')
     fire_x = 1300
     fire_y = random.randint(100, 500)
     fire_x_change = -7
 
     # Octopus
     global octopus_image
-    octopus_image = pygame.image.load('kraken.png')
+    octopus_image = pygame.image.load('octopus.png')
     octopus_x = 1200
     octopus_y = 300
     octopus_y_change = -5
@@ -191,7 +191,7 @@ def game_loop():
     waterdrop_y_change = []
     number_of_waterdrops = random.randint(1, 3)
     for _ in range(number_of_waterdrops):
-        waterdrop_image.append(pygame.image.load('water-drop.png'))
+        waterdrop_image.append(pygame.image.load('waterdrop.png'))
         waterdrop_x.append(random.randint(0, 1300))
         waterdrop_y.append(0)
         waterdrop_y_change.append(5)
@@ -320,7 +320,7 @@ def game_loop():
                     dragon_y = 300
                     dragon_y_change = -5
                     dragon_life_point = 5
-                    fire_image = pygame.image.load('santelmo.png')
+                    fire_image = pygame.image.load('fire.png')
                     fire_x = 1300
                     fire_y = random.randint(100, 500)
                     fire_x_change = -7
@@ -344,7 +344,7 @@ def game_loop():
 
                 # Fire Reset
                 if fire_x <= -100:
-                    fire_image = pygame.image.load('santelmo.png')
+                    fire_image = pygame.image.load('fire.png')
                     fire_x = 1300
                     fire_y = random.randint(100, 500)
                     fire_x_change = -7
@@ -384,12 +384,12 @@ def game_loop():
 
                 # Fire Reset
                 if fire_x <= 0:
-                    fire_image = pygame.image.load('santelmo.png')
+                    fire_image = pygame.image.load('fire.png')
                     fire_x = 0
                     fire_y = random.randint(100, 500)
                     fire_x_change = 7
                 elif fire_x >= 1300:
-                    fire_image = pygame.image.load('santelmo.png')
+                    fire_image = pygame.image.load('fire.png')
                     fire_x = 1300
                     fire_y = random.randint(100, 500)
                     fire_x_change = -7
@@ -437,7 +437,7 @@ def game_loop():
                     waterdrop_y_change = []
                     number_of_waterdrops = random.randint(1, 3)
                     for _ in range(number_of_waterdrops):
-                        waterdrop_image.append(pygame.image.load('water-drop.png'))
+                        waterdrop_image.append(pygame.image.load('waterdrop.png'))
                         waterdrop_x.append(random.randint(0, 1300))
                         waterdrop_y.append(0)
                         waterdrop_y_change.append(5)
