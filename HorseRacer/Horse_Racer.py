@@ -25,7 +25,7 @@ def bat_positioning(x, y, b):
     screen.blit(bat_image[b], (x, y))
 
 def arrow_positioning(x, y):
-    screen.blit(arrow_image, (x, y + 10))
+    screen.blit(arrow_image, (x, y))
 
 def dragon_positioning(x, y):
     screen.blit(dragon_image, (x, y))
