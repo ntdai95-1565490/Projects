@@ -31,13 +31,13 @@ def dragon_positioning(x, y):
     screen.blit(dragon_image, (x, y))
 
 def fire_positioning(x, y):
-    screen.blit(fire_image, (x, y + 10))
+    screen.blit(fire_image, (x, y))
 
 def octopus_positioning(x, y):
     screen.blit(octopus_image, (x, y))
 
 def waterdrop_positioning(x, y, w):
-    screen.blit(waterdrop_image[w], (x, y + 10))
+    screen.blit(waterdrop_image[w], (x, y))
 
 # Collision
 # Enemy killer collisions
