@@ -75,24 +75,47 @@ def boss_player_collision(boss_x, boss_y, player_x, player_y):
 def game_start_text():
     first_line_font = pygame.font.Font('freesansbold.ttf', 60)
     font = pygame.font.Font('freesansbold.ttf', 35)
-    first_line = first_line_font.render("Welcome to Horse Racer!", True, (0, 0, 0))
-    second_line = font.render("Use the up, left, and right arrow keys to jump, move left and move right.", True, (0, 0, 0))
-    third_line = font.render("To shoot down bats, dragons, and octopus, press space to shoot arrows.", True, (0, 0, 0))
-    fourth_line = font.render("Press s to start the game.", True, (0, 0, 0))
-    screen.blit(first_line, (400, 150))
-    screen.blit(second_line, (150, 350))
-    screen.blit(third_line, (150, 400))
-    screen.blit(fourth_line, (550, 550))
+    last_line_font = pygame.font.Font('freesansbold.ttf', 45)
+
+    lines = ["Welcome to Horse Racer!", "Use the up, left, and right arrow keys to jump, move left and move right.", "To shoot down bats, dragons, and octopus, press space to shoot arrows.", "Press s to start the game."]
+    for index, value in enumerate(lines):
+        if index == 0:
+            line = first_line_font.render(value, True, (0, 255, 0))
+        elif index == 3:
+            line = last_line_font.render(value, True, (0, 255, 0))
+        else:
+            line = font.render(value, True, (0, 255, 0))
+
+        line_surface = pygame.Surface(line.get_size())
+        line_surface.fill((0, 0, 0))
+        line_surface.blit(line, (0, 0))
+
+        if index == 0:
+            screen.blit(line_surface, (425, 150))
+        elif index == 3:
+            screen.blit(line_surface, (500, 550))
+        else:
+            screen.blit(line_surface, (150, 350 + index * 50))
 
 def game_over_text(score_value, game_result):
     first_line_font = pygame.font.Font('freesansbold.ttf', 60)
     font = pygame.font.Font('freesansbold.ttf', 35)
-    first_line = first_line_font.render(game_result, True, (0, 0, 0))
-    second_line = first_line_font.render(f"Your score is {score_value}", True, (0, 0, 0))
-    third_line = font.render("Press p if you want to play again, otherwise close the window or press e to exit.", True, (0, 0, 0))
-    screen.blit(first_line, (525, 150))
-    screen.blit(second_line, (525, 350))
-    screen.blit(third_line, (100, 550))
+
+    lines = [game_result, f"Your score is {score_value}", "Press p if you want to play again, otherwise close the window or press e to exit."]
+    for index, value in enumerate(lines):
+        if index == 2:
+            line = font.render(value, True, (0, 255, 0))
+        else:
+            line = first_line_font.render(value, True, (0, 255, 0))
+
+        line_surface = pygame.Surface(line.get_size())
+        line_surface.fill((0, 0, 0))
+        line_surface.blit(line, (0, 0))
+
+        if index == 2:
+            screen.blit(line_surface, (100, 550))
+        else:
+            screen.blit(line_surface, (525, 150 + index * 200))
 
 def show_score(score_value):
     font = pygame.font.Font('freesansbold.ttf', 64)
@@ -112,6 +135,7 @@ def game_loop():
     global screen
     screen = pygame.display.set_mode((1500, 780))
     # Background
+    first_last_background = pygame.image.load("first_last_background.png")
     background = pygame.image.load("background.png")
     # Caption and Icon
     icon = pygame.image.load("horse_icon.png")
@@ -207,7 +231,7 @@ def game_loop():
         # RGB
         screen.fill((0, 0, 0))
         # Background Image
-        screen.blit(background, (0, 0))
+        screen.blit(first_last_background, (0, 0))
         # Show the welcome message of the game
         game_start_text()
 
@@ -225,11 +249,12 @@ def game_loop():
             screen.fill((0, 0, 0))
             # Background Image
             screen.blit(background, (0, 0))
+
             while game_over:
                 # RGB
                 screen.fill((0, 0, 0))
                 # Background Image
-                screen.blit(background, (0, 0))
+                screen.blit(first_last_background, (0, 0))
                 game_over_text(score_value, game_result)
                 pygame.display.update()
 
