@@ -12,9 +12,6 @@ import pygame
 import random
 import math
 
-# Initializing the game
-pygame.init()
-
 def player_positioning(x, y):
     screen.blit(player_image, (x, y))
 
@@ -104,6 +101,9 @@ def show_score(score_value):
 
 # Main Game Loop
 def game_loop():
+    # Initializing the game
+    pygame.init()
+
     game_open = True
     game_running = False
     game_over = False
