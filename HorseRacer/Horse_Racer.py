@@ -151,12 +151,12 @@ def game_loop():
     player_y_change = 0
 
     # Fence
-    number_of_fences = random.randint(1, 3)
     global fence_image
     fence_image = []
     fence_x = []
     fence_y = []
     fence_x_change = []
+    number_of_fences = random.randint(1, 3)
     for _ in range(number_of_fences):
         fence_image.append(pygame.image.load('fence.png'))
         fence_x.append(random.randint(1500, 1800))
@@ -164,12 +164,12 @@ def game_loop():
         fence_x_change.append(-3)
 
     # Bat
-    number_of_bat = random.randint(0, 2)
     global bat_image
     bat_image = []
     bat_x = []
     bat_y = []
     bat_x_change = []
+    number_of_bat = random.randint(0, 2)
     for _ in range(number_of_bat):
         bat_image.append(pygame.image.load('bat.png'))
         bat_x.append(random.randint(1500, 1800))
@@ -188,7 +188,7 @@ def game_loop():
     global dragon_image
     dragon_image = pygame.image.load('dragon.png')
     dragon_x = 1200
-    dragon_y = 300
+    dragon_y = random.randint(100, 500)
     dragon_y_change = -5
     dragon_life_point = 5
 
@@ -203,7 +203,7 @@ def game_loop():
     global octopus_image
     octopus_image = pygame.image.load('octopus.png')
     octopus_x = 1200
-    octopus_y = 300
+    octopus_y = random.randint(100, 500)
     octopus_y_change = -5
     octopus_life_point = 5
 
@@ -213,7 +213,7 @@ def game_loop():
     waterdrop_x = []
     waterdrop_y = []
     waterdrop_y_change = []
-    number_of_waterdrops = random.randint(1, 3)
+    number_of_waterdrops = random.randint(1, 4)
     for _ in range(number_of_waterdrops):
         waterdrop_image.append(pygame.image.load('waterdrop.png'))
         waterdrop_x.append(random.randint(0, 1300))
@@ -309,7 +309,7 @@ def game_loop():
             player_y += player_y_change
             if player_y <= 100:
                 player_y_change = 7
-            elif player_y == 500:
+            elif player_y >= 500:
                 player_y_change = 0
             player_positioning(player_x, player_y)
             
@@ -327,9 +327,9 @@ def game_loop():
             if count == 2:
                 # Dragon Movement
                 dragon_y += dragon_y_change
-                if dragon_y == 100:
+                if dragon_y <= 100:
                     dragon_y_change = 5
-                elif dragon_y == 500:
+                elif dragon_y >= 500:
                     dragon_y_change = -5
 
                 # collision
@@ -338,17 +338,12 @@ def game_loop():
                     dragon_life_point -= 1
                     score_value += 1
                     arrow_state = "OFF"
+                # Resetting the dragon and the fire statistics for the next dragon
                 if dragon_life_point == 0:
-                    # Resetting the dragon and the fire statistics for the next dragon
-                    dragon_image = pygame.image.load('dragon.png')
-                    dragon_x = 1200
-                    dragon_y = 300
-                    dragon_y_change = -5
+                    dragon_y = random.randint(100, 500)
                     dragon_life_point = 5
-                    fire_image = pygame.image.load('fire.png')
                     fire_x = 1300
                     fire_y = random.randint(100, 500)
-                    fire_x_change = -7
                     count += 1
 
                 # Game over collision
@@ -369,17 +364,15 @@ def game_loop():
 
                 # Fire Reset
                 if fire_x <= -100:
-                    fire_image = pygame.image.load('fire.png')
                     fire_x = 1300
                     fire_y = random.randint(100, 500)
-                    fire_x_change = -7
 
             elif count == 5:
                 # Dragon Movement
                 dragon_y += dragon_y_change
-                if dragon_y == 100:
+                if dragon_y <= 100:
                     dragon_y_change = 5
-                elif dragon_y == 500:
+                elif dragon_y >= 500:
                     dragon_y_change = -5
 
                 # collision
@@ -409,12 +402,10 @@ def game_loop():
 
                 # Fire Reset
                 if fire_x <= 0:
-                    fire_image = pygame.image.load('fire.png')
                     fire_x = 0
                     fire_y = random.randint(100, 500)
                     fire_x_change = 7
                 elif fire_x >= 1300:
-                    fire_image = pygame.image.load('fire.png')
                     fire_x = 1300
                     fire_y = random.randint(100, 500)
                     fire_x_change = -7
@@ -422,9 +413,9 @@ def game_loop():
             elif count == 8:
                 # Octopus Movement
                 octopus_y += octopus_y_change
-                if octopus_y == 100:
+                if octopus_y <= 100:
                     octopus_y_change = 5
-                elif octopus_y == 500:
+                elif octopus_y >= 500:
                     octopus_y_change = -5
 
                 # collision
@@ -460,7 +451,7 @@ def game_loop():
                     waterdrop_x = []
                     waterdrop_y = []
                     waterdrop_y_change = []
-                    number_of_waterdrops = random.randint(1, 3)
+                    number_of_waterdrops = random.randint(1, 4)
                     for _ in range(number_of_waterdrops):
                         waterdrop_image.append(pygame.image.load('waterdrop.png'))
                         waterdrop_x.append(random.randint(0, 1300))
