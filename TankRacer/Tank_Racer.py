@@ -93,7 +93,7 @@ def game_over_text(score_value, game_result):
         if index >= 2:
             screen.blit(line_surface, (125, 550 + (index - 2) * 50))
         else:
-            screen.blit(line_surface, (300, 150 + index * 200))
+            screen.blit(line_surface, (275, 150 + index * 200))
 
 def show_score(score_value):
     font = pygame.font.Font('freesansbold.ttf', 45)
