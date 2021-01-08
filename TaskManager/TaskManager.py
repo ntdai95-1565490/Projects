@@ -1,4 +1,5 @@
 # Importing the necessary modules for formatting the tasks below
+import sys
 import pickle
 import re
 import datetime
@@ -288,7 +289,7 @@ class Main:
                     # Creating a pickle file with the list_of_task object created above
                     instance_of_PickleCreator = PickleCreator(list_of_task)
                     instance_of_PickleCreator.creating_pickle()
-                    break
+                    sys.exit()
                 # For add commands, loading in the list_of_task attribute from the class of Task and then create new attributes for the
                 # task that the user input
                 elif user_input.split()[0].lower() == "add":

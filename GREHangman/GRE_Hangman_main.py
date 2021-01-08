@@ -1,6 +1,7 @@
 # Imorting the random module to randomly select the secret word from the gre_words.txt file and the colored function for user-friendly 
 # display
 import random
+import sys
 from termcolor import colored
 # Importing the side module needed for the program
 import GRE_Hangman_gameplay
@@ -82,7 +83,7 @@ class Main:
             play_again = instance_of_PlayAgain.playing_again()
             if play_again == "n":
                 print(colored(f"You guessed {correct_guess} out of {total_guess} word(s) correctly. Keep up the good work!\n", "yellow"))
-                break
+                sys.exit()
 
 # For running the module as a standalone program, we need to add the following code below:
 if __name__ == "__main__":

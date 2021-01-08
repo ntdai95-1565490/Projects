@@ -1,6 +1,7 @@
 # Importing the random module to randomly select integers for the numerators and the denominators of the two fractions and the colored 
 # function for user-friendly display
 import random
+import sys
 from termcolor import colored
 # Importing the related two modules below
 import ActionFraction_game
@@ -12,7 +13,7 @@ class Validator:
     def user_input_validator(self, type_of_answer):
         # Create a while loop to keep checking the user input for question.
         while True:
-            user_answer = input(f"Enter your answer here as a {type_of_answer}: ")
+            user_answer = input(f"\nEnter your answer here as a {type_of_answer}: ")
             # For comparison operation related questions
             if type_of_answer == "True or False":
                 if user_answer.capitalize() == "True" or user_answer.capitalize() == "False":
@@ -90,9 +91,9 @@ For <, =, and > questions, type either True or False.", "yellow"))
                 play_again = instance_of_Validator.play_again_input_validator()
                 # If the user don't want to play again, then print out the message and end the game
                 if play_again == "n":
-                    final_message = f"You answered {correct_answers}/{total_answers} problems correctly. Keep up the good work!"
+                    final_message = f"\nYou answered {correct_answers}/{total_answers} problems correctly. Keep up the good work!"
                     print(colored(final_message, "yellow"))
-                    break
+                    sys.exit()
             
 # For the module to run as a standalone program, we need to call the function in the below format
 if __name__ == "__main__":

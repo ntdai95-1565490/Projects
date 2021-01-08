@@ -1,4 +1,5 @@
 # Importing the the game file where the actual game_result() function is located and the colored function for user-friendly display
+import sys
 import RockPaperScissors_game
 from termcolor import colored
 
@@ -50,7 +51,7 @@ class Main:
                 # If the user choose no (n) for not playing again, then break out and end the function/program
                 if play_again == "n":
                     print(colored(f"Thank you for playing the game of Rock - Paper - Scissors!\n", "yellow"))
-                    break
+                    sys.exit()
 
 # For running the module as a standalone program, we need to add the following code below:
 if __name__ == "__main__":

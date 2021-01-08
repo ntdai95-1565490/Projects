@@ -38,7 +38,7 @@ class GuessedWordChecker:
             # If the user's guessed word is not valid (the guessed word contains non-alphabetical characters such as numbers of symbols,
             # @, !, etc.), then display the warning message and go back and ask the new guessed word again.
             else:
-                print("Please, guess a real word with alphabetical letters only.\n")
+                print("Please, guess a real word with alphabetical letters only.")
 
     def guessed_word_is_secret_word(self, guessed_word, secret_word, wrong_guess):
         """Decides if the user's guessed word is the same as the secret word"""

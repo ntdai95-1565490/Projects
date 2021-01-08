@@ -9,6 +9,7 @@
 # creators mentioned above.
 
 import pygame
+import sys
 import random
 import math
 
@@ -517,6 +518,7 @@ def game_loop():
         pygame.display.update()
 
     pygame.quit()
+    sys.exit()
 
 if __name__ == '__main__':
     game_loop()
