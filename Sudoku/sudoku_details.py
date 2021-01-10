@@ -1,0 +1,22 @@
+# Screen
+SCREEN_WIDTH = 1150
+SCREEN_HEIGHT = 780
+
+# Colours
+PINK = (255, 51, 153)
+LIGHTGREY = (224, 224, 224)
+BROWN = (210, 105, 30)
+BLUE = (0, 128, 255)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (0, 204, 0)
+RED = (204, 0, 0)
+YELLOW = (255, 255, 51)
+GREY = (160, 160, 160)
+
+# Positions and sizes
+TABLE_POSITION_X = 50
+TABLE_POSITION_Y = 120
+# Cell size is 70 * 70 and Table size is 630 * 630
+CELL_SIZE = 70
+TABLE_SIZE = CELL_SIZE * 9
