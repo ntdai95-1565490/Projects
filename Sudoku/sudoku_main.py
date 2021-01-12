@@ -14,7 +14,7 @@ class Main:
     def reset(self):
         self.is_music_playing = True
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.first_background = pygame.image.load("first_background.png")
+        self.first_background = pygame.image.load("first_background.png").convert()
         self.starting_time = 0
         self.program_opening = True
         self.game_running = False
