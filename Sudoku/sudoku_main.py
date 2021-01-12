@@ -223,7 +223,7 @@ class Main:
             self.selected_cell = None
         elif self.is_sudoku_valid(self.entered_numbers_for_solver) == False:
             self.current_result = "Incorrect!"
-        else:
+        elif self.current_result != False:
             self.current_result = None
 
     def solver_screen_draw(self, screen, entered_numbers_for_solver):
