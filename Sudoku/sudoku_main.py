@@ -1,6 +1,7 @@
 import pygame
 from pygame import mixer
 import sys
+from os import path
 import requests
 from bs4 import BeautifulSoup
 from sudoku_details import *
@@ -8,13 +9,14 @@ from sudoku_details import *
 class Main:
     def __init__(self):
         pygame.init()
-        mixer.music.load("background_music.wav")
+        mixer.music.load(path.join(path.join(path.dirname(__file__), "Music"), "background_music.wav"))
+        mixer.music.set_volume(0.05)
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.first_background = pygame.image.load(path.join(path.join(path.dirname(__file__), "Images"), "first_background.png")).convert()
         self.reset()
 
     def reset(self):
         self.is_music_playing = True
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.first_background = pygame.image.load("first_background.png").convert()
         self.starting_time = 0
         self.program_opening = True
         self.game_running = False
@@ -75,7 +77,7 @@ class Main:
                             self.program_opening = False
             
             self.game_run()
-            self.solve_run()
+            self.solver_run()
 
             pygame.display.update()
         pygame.quit()
@@ -148,7 +150,7 @@ class Main:
 
 ### Running the solver related functions only ###
 
-    def solve_run(self):
+    def solver_run(self):
         while self.solver_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -325,6 +327,7 @@ class Main:
                             self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]].sort()
                             self.selected_cell = None
                         else:
+                            self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]].remove(int(event.unicode))
                             self.selected_cell = None
 
             if self.game_status == True:
@@ -353,9 +356,9 @@ class Main:
     def game_screen_draw(self, screen, font, given_numbers, noted_numbers, selected_cell, current_result, game_status, is_checking, entered_numbers_for_game, entered_numbers_for_game_solution, starting_time):
         self.screen.fill(WHITE)
         self.given_numbers_draw(self.screen, self.given_numbers)
-        self.noted_numbers_draw(self.screen, self.noted_numbers)
         self.table_cell_draw(self.screen)
         self.selected_cell_fill(self.screen, self.selected_cell)
+        self.noted_numbers_draw(self.screen, self.noted_numbers)
 
         if self.current_result == True:
             final_message = "Game Over!"
@@ -495,7 +498,7 @@ class Main:
 
     def showing_number_on_screen(self, screen, number, number_position_x, number_position_y):
         if type(number) == str:
-            number_font = pygame.font.Font('freesansbold.ttf', CELL_SIZE // 3).render(number, False, PURPLE)
+            number_font = pygame.font.Font('freesansbold.ttf', CELL_SIZE // 3).render(number, False, BROWN)
             number_position_x += 5
             number_position_y += 5
         else:
@@ -510,8 +513,8 @@ class Main:
         pygame.draw.rect(self.screen, BLACK, (700, 10, 420, 450), 5)
 
         status_font = pygame.font.Font('freesansbold.ttf', 50)
-        guide_font = pygame.font.Font('freesansbold.ttf', 26)
-        lines = [final_message, "Instructions:", u"\u2022" + "   Left click on the cell,", "then type in your number.", u"\u2022" + "   Type 0 to delete a", "number in the selected cell.", u"\u2022" + "   In game, right click on cell", "and type number as note."]
+        guide_font = pygame.font.Font('freesansbold.ttf', 25)
+        lines = [final_message, "Instructions:", u"\u2022" + "   Left click on the cell, then", "type in your number.", u"\u2022" + "   Type 0 to delete a number or", "all notes in the selected cell.", u"\u2022" + "   In game, right click on a cell", "and type a unique number as", "a note or a same number to", "remove that number from notes."]
 
         for index, value in enumerate(lines):
             if (index == 0 and final_message == "Completed!") or (index == 0 and final_message == "Excellent!"):
@@ -519,7 +522,7 @@ class Main:
             elif (index == 0 and final_message == "Impossible to solve!") or (index == 0 and final_message == "Game Over!") or (index == 0 and final_message == "Incorrect!"):
                 line = status_font.render(value, True, (RED))
             elif (index == 0 and final_message == "Unsolved!") or (index == 0 and final_message == "Incomplete!"):
-                line = status_font.render(value, True, (BROWN))
+                line = status_font.render(value, True, (PURPLE))
             elif index == 1:
                 line = self.font.render(value, True, (BLACK))
             else:
@@ -539,7 +542,7 @@ class Main:
             elif index == 1:
                 self.screen.blit(line, (780, 40))
             else:
-                self.screen.blit(line, (745, 40 + index * 50))
+                self.screen.blit(line, (715, 50 + index * 40))
 
 ### Sudoku solver related functions ###
 
