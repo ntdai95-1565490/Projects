@@ -322,12 +322,14 @@ class Main:
                             self.entered_numbers_for_game[self.selected_cell[1]][self.selected_cell[0]] = int(event.unicode)
                             self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]] = []
                             self.selected_cell = None
-                        elif self.selected_cell != None and int(event.unicode) not in self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]]:
+                        elif self.selected_cell != None and int(event.unicode) not in self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]] and int(event.unicode) != 0:
                             self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]].append(int(event.unicode))
                             self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]].sort()
                             self.selected_cell = None
-                        else:
+                        elif int(event.unicode) != 0:
                             self.noted_numbers[self.selected_cell[1]][self.selected_cell[0]].remove(int(event.unicode))
+                            self.selected_cell = None
+                        else:
                             self.selected_cell = None
 
             if self.game_status == True:
@@ -420,12 +422,12 @@ class Main:
         pygame.draw.rect(self.screen, BLACK, (540, 10, 140, 100), 5)
         time_string = "Time:"
         time_count = pygame.time.get_ticks() - self.starting_time
-        time_count_string = "%s:%s" % (str(int(time_count / 60000)), str(int((time_count % 60000) / 1000)))
+        time_count_string = "%s:%s" % (str(int(time_count / 60_000)), str(int((time_count % 60_000) / 1_000)))
         time_font = pygame.font.Font('freesansbold.ttf', 35)
         time_text = time_font.render(time_string, True, (BLACK))
         self.screen.blit(time_text, (565, 25))
         time_count_text = time_font.render(time_count_string, True, (BLACK))
-        self.screen.blit(time_count_text, (585, 65))
+        self.screen.blit(time_count_text, ((585 - (len(time_count_string) - 3) * 10), 65))
 
     def loading_buttons_on_game_page(self, screen, mouse_position, list_of_button_texts, list_of_button_positions_x, list_of_button_positions_y, check_button_size_x, check_button_size_y, buttons_size_x, buttons_size_y_one_line, buttons_size_y_two_lines, font):
         self.mouse_position = pygame.mouse.get_pos()
