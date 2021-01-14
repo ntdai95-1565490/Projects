@@ -575,10 +575,10 @@ class Main:
             else:
                 numbers_list = []
 
-        for c in range(9):
-            for r in range(9):
-                if nested_lists_of_numbers[r][c] != 0:
-                    numbers_list.append(nested_lists_of_numbers[r][c])
+        for column_index in range(9):
+            for row_index in range(9):
+                if nested_lists_of_numbers[row_index][column_index] != 0:
+                    numbers_list.append(nested_lists_of_numbers[row_index][column_index])
             if len(numbers_list) != len(set(numbers_list)):
                 return False
             else:
@@ -586,10 +586,10 @@ class Main:
 
         for top_row_of_box in range(0, 9, 3):
             for left_column_of_box in range(0, 9, 3):
-                for r in range(top_row_of_box, top_row_of_box + 3):
-                    for c in range(left_column_of_box, left_column_of_box + 3):
-                        if nested_lists_of_numbers[r][c] != 0:
-                            numbers_list.append(nested_lists_of_numbers[r][c])
+                for row_index in range(top_row_of_box, top_row_of_box + 3):
+                    for column_index in range(left_column_of_box, left_column_of_box + 3):
+                        if nested_lists_of_numbers[row_index][column_index] != 0:
+                            numbers_list.append(nested_lists_of_numbers[row_index][column_index])
                 if len(numbers_list) != len(set(numbers_list)):
                     return False
                 else:
@@ -597,10 +597,10 @@ class Main:
         return True
 
     def find_empty_cell(self, nested_lists_of_numbers):
-        for row in range(9):
-            for column in range(9):
-                if nested_lists_of_numbers[row][column] == 0:
-                    return row, column
+        for row_index in range(9):
+            for column_index in range(9):
+                if nested_lists_of_numbers[row_index][column_index] == 0:
+                    return row_index, column_index
         return None, None
 
     def check_empty_cell(self, nested_lists_of_numbers, guess, row, column):
@@ -613,9 +613,9 @@ class Main:
 
         top_row_of_box = (row // 3) * 3
         left_column_of_box = (column // 3) * 3
-        for r in range(top_row_of_box, top_row_of_box + 3):
-            for c in range(left_column_of_box, left_column_of_box + 3):
-                if nested_lists_of_numbers[r][c] == guess:
+        for row_index in range(top_row_of_box, top_row_of_box + 3):
+            for column_index in range(left_column_of_box, left_column_of_box + 3):
+                if nested_lists_of_numbers[row_index][column_index] == guess:
                     return False
         return True
 
