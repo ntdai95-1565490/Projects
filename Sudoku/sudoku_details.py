@@ -1,6 +1,7 @@
 # Screen
 SCREEN_WIDTH = 1150
 SCREEN_HEIGHT = 780
+FPS = 60
 
 # Colours
 PURPLE = (153, 50, 76)

@@ -10,7 +10,8 @@ class Main:
     def __init__(self):
         pygame.init()
         mixer.music.load(path.join(path.join(path.dirname(__file__), "Music"), "background_music.wav"))
-        mixer.music.set_volume(0.05)
+        mixer.music.set_volume(0.2)
+        self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.first_background = pygame.image.load(path.join(path.join(path.dirname(__file__), "Images"), "first_background.png")).convert()
         self.reset()
@@ -49,6 +50,7 @@ class Main:
     def main(self):
         mixer.music.play(-1)
         while self.program_opening:
+            self.clock.tick(FPS)
             self.screen.blit(self.first_background, (0, 0))
             self.initial_message_to_screen(self.screen, self.font)
             self.loading_buttons_on_first_page(self.screen, self.font, self.mouse_position, self.list_of_button_positions_x, self.list_of_button_positions_y, self.buttons_size_x, self.buttons_size_y_one_line, self.buttons_size_y_two_lines)
@@ -152,6 +154,7 @@ class Main:
 
     def solver_run(self):
         while self.solver_running:
+            self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.solver_running = False
@@ -268,6 +271,7 @@ class Main:
 
     def game_run(self):
         while self.game_running:
+            self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.game_running = False
