@@ -117,12 +117,14 @@ def game_loop():
     global screen
     screen = pygame.display.set_mode((1000, 780))
     # Backgrounds
-    first_last_background = pygame.image.load("first_last_background.png")
-    background = pygame.image.load("background.png")
+    first_last_background = pygame.image.load("first_last_background.png").convert()
+    background = pygame.image.load("background.png").convert()
     # Caption and Icon
-    icon = pygame.image.load("tank_icon.png")
+    icon = pygame.image.load("tank_icon.png").convert()
     pygame.display.set_caption("Tank Racer")
     pygame.display.set_icon(icon)
+    # Clock
+    clock = pygame.time.Clock()
 
     # Player
     global player_image
@@ -224,6 +226,8 @@ def game_loop():
     game_result = ""
 
     while game_open:
+        # Clock
+        clock.tick(60)
         # RGB
         screen.fill((50,205,50))
         # Background Image
@@ -242,12 +246,16 @@ def game_loop():
                     game_over = False
 
         while game_running:
+            # Clock
+            clock.tick(60)
             # RGB
             screen.fill((50,205,50))
             # Background Image
             screen.blit(background, (0, 0))
             
             while game_over:
+                # Clock
+                clock.tick(60)
                 # RGB
                 screen.fill((50,205,50))
                 # Background Image

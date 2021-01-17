@@ -136,12 +136,14 @@ def game_loop():
     global screen
     screen = pygame.display.set_mode((1500, 780))
     # Background
-    first_last_background = pygame.image.load("first_last_background.png")
-    background = pygame.image.load("background.png")
+    first_last_background = pygame.image.load("first_last_background.png").convert()
+    background = pygame.image.load("background.png").convert()
     # Caption and Icon
-    icon = pygame.image.load("horse_icon.png")
+    icon = pygame.image.load("horse_icon.png").convert()
     pygame.display.set_caption("Horse Racer")
     pygame.display.set_icon(icon)
+    # Clock
+    clock = pygame.time.Clock()
 
     # Player
     global player_image
@@ -162,7 +164,7 @@ def game_loop():
         fence_image.append(pygame.image.load('fence.png'))
         fence_x.append(random.randint(1500, 1800))
         fence_y.append(570)
-        fence_x_change.append(-3)
+        fence_x_change.append(-10)
 
     # Bat
     global bat_image
@@ -175,14 +177,14 @@ def game_loop():
         bat_image.append(pygame.image.load('bat.png'))
         bat_x.append(random.randint(1500, 1800))
         bat_y.append(random.randint(100, 550))
-        bat_x_change.append(-3)
+        bat_x_change.append(-10)
 
     # Arrow
     global arrow_image
     arrow_image = pygame.image.load('arrow.png')
     arrow_x = 0
     arrow_y = 0
-    arrow_x_change = 15
+    arrow_x_change = 25
     arrow_state = "OFF"
 
     # Dragon
@@ -190,7 +192,7 @@ def game_loop():
     dragon_image = pygame.image.load('dragon.png')
     dragon_x = 1200
     dragon_y = random.randint(100, 500)
-    dragon_y_change = -5
+    dragon_y_change = -10
     dragon_life_point = 5
 
     # Fire
@@ -198,15 +200,15 @@ def game_loop():
     fire_image = pygame.image.load('fire.png')
     fire_x = 1300
     fire_y = random.randint(100, 500)
-    fire_x_change = -7
+    fire_x_change = -13
 
     # Octopus
     global octopus_image
     octopus_image = pygame.image.load('octopus.png')
     octopus_x = 1200
     octopus_y = random.randint(100, 500)
-    octopus_y_change = -5
-    octopus_life_point = 5
+    octopus_y_change = -10
+    octopus_life_point = 10
 
     # Waterdrop
     global waterdrop_image
@@ -219,7 +221,7 @@ def game_loop():
         waterdrop_image.append(pygame.image.load('waterdrop.png'))
         waterdrop_x.append(random.randint(0, 1300))
         waterdrop_y.append(0)
-        waterdrop_y_change.append(5)
+        waterdrop_y_change.append(10)
 
     # Count until next boss is coming
     count = 0
@@ -229,6 +231,8 @@ def game_loop():
     game_result = ""
 
     while game_open:
+        # Clock
+        clock.tick(60)
         # RGB
         screen.fill((0, 0, 0))
         # Background Image
@@ -246,12 +250,16 @@ def game_loop():
                     game_over = False
 
         while game_running:
+            # Clock
+            clock.tick(60)
             # RGB
             screen.fill((0, 0, 0))
             # Background Image
             screen.blit(background, (0, 0))
 
             while game_over:
+                # Clock
+                clock.tick(60)
                 # RGB
                 screen.fill((0, 0, 0))
                 # Background Image
@@ -281,13 +289,13 @@ def game_loop():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         if player_y == 500:
-                            player_x_change = -7
+                            player_x_change = -15
                     if event.key == pygame.K_RIGHT:
                         if player_y == 500:
-                            player_x_change = 7
+                            player_x_change = 15
                     if event.key == pygame.K_UP:
                         if player_y == 500:
-                            player_y_change = -7
+                            player_y_change = -15
                     if event.key == pygame.K_SPACE:
                         if arrow_state == "OFF":
                             # Get the current x, y cordinate of the horse rider
@@ -309,7 +317,7 @@ def game_loop():
 
             player_y += player_y_change
             if player_y <= 100:
-                player_y_change = 7
+                player_y_change = 15
             elif player_y >= 500:
                 player_y_change = 0
             player_positioning(player_x, player_y)
@@ -329,9 +337,9 @@ def game_loop():
                 # Dragon Movement
                 dragon_y += dragon_y_change
                 if dragon_y <= 100:
-                    dragon_y_change = 5
+                    dragon_y_change = 10
                 elif dragon_y >= 500:
-                    dragon_y_change = -5
+                    dragon_y_change = -10
 
                 # collision
                 is_collision = boss_player_collision(dragon_x, dragon_y, arrow_x, arrow_y)
@@ -372,9 +380,9 @@ def game_loop():
                 # Dragon Movement
                 dragon_y += dragon_y_change
                 if dragon_y <= 100:
-                    dragon_y_change = 5
+                    dragon_y_change = 10
                 elif dragon_y >= 500:
-                    dragon_y_change = -5
+                    dragon_y_change = -10
 
                 # collision
                 is_collision = boss_player_collision(dragon_x, dragon_y, arrow_x, arrow_y)
@@ -405,19 +413,19 @@ def game_loop():
                 if fire_x <= 0:
                     fire_x = 0
                     fire_y = random.randint(100, 500)
-                    fire_x_change = 7
+                    fire_x_change = 13
                 elif fire_x >= 1300:
                     fire_x = 1300
                     fire_y = random.randint(100, 500)
-                    fire_x_change = -7
+                    fire_x_change = -13
             
             elif count == 8:
                 # Octopus Movement
                 octopus_y += octopus_y_change
                 if octopus_y <= 100:
-                    octopus_y_change = 5
+                    octopus_y_change = 10
                 elif octopus_y >= 500:
-                    octopus_y_change = -5
+                    octopus_y_change = -10
 
                 # collision
                 is_collision = boss_player_collision(octopus_x, octopus_y, arrow_x, arrow_y)
@@ -457,7 +465,7 @@ def game_loop():
                         waterdrop_image.append(pygame.image.load('waterdrop.png'))
                         waterdrop_x.append(random.randint(0, 1300))
                         waterdrop_y.append(0)
-                        waterdrop_y_change.append(5)
+                        waterdrop_y_change.append(10)
 
             else: 
                 # Fence Movement
@@ -500,7 +508,7 @@ def game_loop():
                         fence_image.append(pygame.image.load('fence.png'))
                         fence_x.append(random.randint(1500, 1800))
                         fence_y.append(570)
-                        fence_x_change.append(-3)
+                        fence_x_change.append(-10)
 
                     bat_image = []
                     bat_x = []
@@ -511,7 +519,7 @@ def game_loop():
                         bat_image.append(pygame.image.load('bat.png'))
                         bat_x.append(random.randint(1500, 1800))
                         bat_y.append(random.randint(100, 550))
-                        bat_x_change.append(-3)
+                        bat_x_change.append(-10)
 
             pygame.display.update()
 
