@@ -47,14 +47,17 @@ class Main:
         self.rotate_ship = None
         self.selected_cell = None
         self.selected_cell_main_battle = None
+        self.selected_cell_main_battle_computer_turn = None
         self.player_grid = [[0 for _ in range(11)] for _ in range(11)]
         self.computer_grid = [[0 for _ in range(11)] for _ in range(11)]
+        self.player_entered_grid = [[0 for _ in range(11)] for _ in range(11)]
         self.computer_entered_grid = [[0 for _ in range(11)] for _ in range(11)]
         self.missile_on = False
         self.missile_x_border = 0
         self.missile_position_y = 0
         self.player_ships_sunk = 0
-        self.computer_ships_sunk = 0
+        self.computer_ships_sunk = []
+        self.player_score = 0
 
 ### GAME START SCREEN ###
 
@@ -158,7 +161,7 @@ class Main:
                     for i in range(13):
                         if i == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y \
                         and any(5 in row for row in self.player_grid) and any(4 in row for row in self.player_grid) and any(3 in row for row in self.player_grid) and any(2 in row for row in self.player_grid) and any(1 in row for row in self.player_grid): 
-                            self.generating_computer_ships(self.computer_grid)
+                            self.generating_computer_ships(self.player_entered_grid)
                             self.game_battle_running = True
                         elif i == 2 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
                             # Sound on/off
@@ -277,7 +280,7 @@ class Main:
             pg.display.update()
             self.clock.tick(FPS)
 
-    def generating_computer_ships(self, computer_grid):
+    def generating_computer_ships(self, player_entered_grid):
         computer_ship_sizes = [[3, 1], [3, 1], [4, 1], [4, 2], [5, 1]]
         for index, computer_ship_size in enumerate(computer_ship_sizes):
             valid = False
@@ -285,18 +288,18 @@ class Main:
                 computer_ship_x = random.randint(0, 10)
                 computer_ship_y = random.randint(0, 10)
                 computer_ship_position = random.choice(["horizontal", "vertical"])
-                valid = self.validate(self.computer_grid, computer_ship_size, computer_ship_x, computer_ship_y, computer_ship_position)
+                valid = self.validate(self.player_entered_grid, computer_ship_size, computer_ship_x, computer_ship_y, computer_ship_position)
 
             if computer_ship_position == "horizontal":
                 for j in range(computer_ship_size[1]):
                     for i in range(computer_ship_size[0]):
-                        self.computer_grid[computer_ship_y + j][computer_ship_x + i] = index + 1
+                        self.player_entered_grid[computer_ship_y + j][computer_ship_x + i] = index + 1
             else:
                 for j in range(computer_ship_size[1]):
                     for i in range(computer_ship_size[0]):
-                        self.computer_grid[computer_ship_y + i][computer_ship_x + j] = index + 1
+                        self.player_entered_grid[computer_ship_y + i][computer_ship_x + j] = index + 1
 
-    def validate(self, computer_grid, computer_ship_size, computer_ship_x, computer_ship_y, computer_ship_position):
+    def validate(self, player_entered_grid, computer_ship_size, computer_ship_x, computer_ship_y, computer_ship_position):
         if computer_ship_position == "horizontal" and (computer_ship_x + computer_ship_size[0] > 10 or computer_ship_y + computer_ship_size[1] > 10):
             return False
         elif computer_ship_position == "vertical" and (computer_ship_x + computer_ship_size[1] > 10 or computer_ship_y + computer_ship_size[0] > 10):
@@ -304,17 +307,17 @@ class Main:
         elif computer_ship_position == "horizontal":
             for j in range(computer_ship_size[1]):
                 for i in range(computer_ship_size[0]):
-                    if self.computer_grid[computer_ship_y + j][computer_ship_x + i] != 0:
+                    if self.player_entered_grid[computer_ship_y + j][computer_ship_x + i] != 0:
                         return False
         elif computer_ship_position == "vertical":
             for j in range(computer_ship_size[1]):
                 for i in range(computer_ship_size[0]):
-                    if self.computer_grid[computer_ship_y + i][computer_ship_x + j] != 0:
+                    if self.player_entered_grid[computer_ship_y + i][computer_ship_x + j] != 0:
                         return False
         return True
 
     def update_main_setup(self, rotate_ship, selected_ship, mouse_position, player_grid, game_battle_running, computer_turn, missile_position_y, missile_on):
-        self.all_sprites_group.update(self.rotate_ship, self.selected_ship, self.mouse_position, self.player_grid, self.game_battle_running, self.computer_turn, self.missile_position_y, self.missile_on)
+        self.all_sprites_group.update(self.rotate_ship, self.selected_ship, self.mouse_position, self.player_grid, self.game_battle_running, self.computer_turn, self.missile_position_y, self.missile_on, self.computer_grid, self.computer_ships_sunk)
         self.rotate_ship = False
 
     def draw_main_setup(self):
@@ -397,12 +400,12 @@ class Main:
             self.screen.blit(text_font, (self.list_of_button_positions_x[i] + (self.buttons_size_x - text_font_width) // 2, self.list_of_button_positions_y[i] + (self.buttons_size_y - text_font_height) // 4))
 
 ### GAME MAIN BATTLE SCREEN ###
-
+    
     def game_ending_win_check(self):
-        self.computer_ships_sunk = 0
+        self.computer_ships_sunk = []
         for i in range(5):
-            if sum(ship_type.count(i + 1) for ship_type in self.computer_grid) == 0:
-                self.computer_ships_sunk += 1
+            if sum(ship_type.count(i + 1) for ship_type in self.player_entered_grid) == 0:
+                self.computer_ships_sunk.append(i + 1)
 
     def run_main_battle(self):
         self.missile = Missile()
@@ -410,7 +413,11 @@ class Main:
         for row_index, row in enumerate(self.player_grid):
             for column_index, column in enumerate(row):
                 self.computer_entered_grid[row_index][column_index] = column
-                
+
+        for row_index, row in enumerate(self.player_entered_grid):
+            for column_index, column in enumerate(row):
+                self.computer_grid[row_index][column_index] = column
+
         while self.game_battle_running:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -422,7 +429,7 @@ class Main:
                     if self.missile_on == False:
                         self.selected_cell_main_battle = [(self.mouse_position[0] - TABLE_POSITION_X_MAIN_BATTLE) // CELL_SIZE, (self.mouse_position[1] - TABLE_POSITION_Y) // CELL_SIZE]
                     if TABLE_POSITION_X_MAIN_BATTLE > self.mouse_position[0] or self.mouse_position[0] > TABLE_POSITION_X_MAIN_BATTLE + TABLE_SIZE or TABLE_POSITION_Y > self.mouse_position[1] or self.mouse_position[1] > TABLE_POSITION_Y + TABLE_SIZE or \
-                    self.computer_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] ==  "miss" or self.computer_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] ==  "hit":
+                    self.player_entered_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] ==  "miss" or self.player_entered_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] ==  "hit":
                         self.selected_cell_main_battle = None
                     
                     for i in range(6):
@@ -441,7 +448,7 @@ class Main:
             self.draw_main_battle()
 
             self.game_ending_win_check()
-            if self.computer_ships_sunk == 5:
+            if len(self.computer_ships_sunk) == 5:
                 self.game_ending_win = True
                 self.game_win_screen()
 
@@ -451,7 +458,7 @@ class Main:
             pg.display.update()
 
             if self.missile_x_border != 0 and self.missile_on == False:
-                #time.sleep(2)
+                time.sleep(1)
                 self.computer_turn = True
                 self.missile_x_border = 0
                 self.run_main_battle_computer_turn()
@@ -468,7 +475,7 @@ class Main:
             self.missile_on = False
             self.selected_cell_main_battle = None
         
-        self.all_sprites_group.update(self.rotate_ship, self.selected_ship, self.mouse_position, self.player_grid, self.game_battle_running, self.computer_turn, self.missile_position_y, self.missile_on)
+        self.all_sprites_group.update(self.rotate_ship, self.selected_ship, self.mouse_position, self.player_grid, self.game_battle_running, self.computer_turn, self.missile_position_y, self.missile_on, self.computer_grid, self.computer_ships_sunk)
 
     def draw_main_battle(self):
         self.main_battle_background_x += 0.5
@@ -489,12 +496,14 @@ class Main:
         self.all_sprites_group.draw(self.screen)
 
     def selected_cell_fill_main_battle(self, screen, selected_cell_main_battle):
-        if self.missile.rect.center[0] == self.missile_x_border and self.selected_cell_main_battle != None and (self.computer_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] != 0 and self.computer_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] != "miss"):
-            self.computer_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] = "hit"
-        elif self.missile.rect.center[0] == self.missile_x_border and self.selected_cell_main_battle != None and self.computer_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] == 0:
-            self.computer_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] = "miss"
+        if self.missile.rect.center[0] == self.missile_x_border and self.selected_cell_main_battle != None and (self.player_entered_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] != 0 and self.player_entered_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] != "miss"):
+            self.player_entered_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] = "hit"
+            self.player_score += 30
+        elif self.missile.rect.center[0] == self.missile_x_border and self.selected_cell_main_battle != None and self.player_entered_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] == 0:
+            self.player_entered_grid[self.selected_cell_main_battle[0]][self.selected_cell_main_battle[1]] = "miss"
+            self.player_score -= 5
 
-        for row_index, row in enumerate(self.computer_grid):
+        for row_index, row in enumerate(self.player_entered_grid):
             for column_index, column in enumerate(row):
                 if column == "hit":
                     pg.draw.rect(self.screen, RED, (row_index * CELL_SIZE + TABLE_POSITION_X_MAIN_BATTLE, column_index * CELL_SIZE + TABLE_POSITION_Y, CELL_SIZE, CELL_SIZE))
@@ -503,7 +512,7 @@ class Main:
 
     def message_to_screen_main_battle(self, screen):
         line_font = pg.font.Font('freesansbold.ttf', 60)
-        list_of_messages = ["Your turn!", f"Your score: {123}", "Computer's ships", f"sunk: {self.computer_ships_sunk}/5"]
+        list_of_messages = ["Your turn!", f"Your score: {len(self.computer_ships_sunk) * 50 - self.player_ships_sunk * 30 + self.player_score}", "Computer's ships", f"sunk: {len(self.computer_ships_sunk)}/5"]
         for index, message in enumerate(list_of_messages):
             line = line_font.render(message, True, YELLOW)
             line_surface = pg.Surface(line.get_size())
@@ -549,7 +558,7 @@ class Main:
 
         if self.selected_cell_main_battle == None and TABLE_POSITION_X_MAIN_BATTLE < self.mouse_position[0] < TABLE_POSITION_X_MAIN_BATTLE + TABLE_SIZE and TABLE_POSITION_Y < self.mouse_position[1] < TABLE_POSITION_Y + TABLE_SIZE:
             hovered_cell = [(self.mouse_position[0] - TABLE_POSITION_X_MAIN_BATTLE) // CELL_SIZE, (self.mouse_position[1] - TABLE_POSITION_Y) // CELL_SIZE]
-            if isinstance(self.computer_grid[hovered_cell[0]][hovered_cell[1]], int):
+            if isinstance(self.player_entered_grid[hovered_cell[0]][hovered_cell[1]], int):
                 pg.draw.rect(self.screen, YELLOW, (hovered_cell[0] * CELL_SIZE + TABLE_POSITION_X_MAIN_BATTLE, hovered_cell[1] * CELL_SIZE + TABLE_POSITION_Y, CELL_SIZE, CELL_SIZE))
 
 ### GAME MAIN BATTLE COMPUTER TURN SCREEN ###
@@ -568,6 +577,10 @@ class Main:
                 self.computer_entered_grid[next_cell_target[0]][next_cell_target[1]] = "miss"
             else:
                 self.computer_entered_grid[next_cell_target[0]][next_cell_target[1]] = "hit"
+                self.player_score -= 10
+
+            self.selected_cell_main_battle_computer_turn = [next_cell_target[1], next_cell_target[0]] 
+
         elif self.game_ending_lose == False:
             computer_selecting_cell = True
             while computer_selecting_cell:
@@ -584,6 +597,10 @@ class Main:
                     else:
                         self.computer_entered_grid[computer_select_row][computer_select_column] = "hit"
                         computer_selecting_cell = False
+                        self.player_score -= 10
+
+            self.selected_cell_main_battle_computer_turn = [computer_select_column, computer_select_row]
+
 
     def checking_ship_hit_but_not_sunk(self):
         for row_index, row in enumerate(self.computer_entered_grid):
@@ -602,6 +619,7 @@ class Main:
                         if isinstance(self.computer_entered_grid[row_index][column_index - 1], int) and self.computer_entered_grid[row_index][column_index] == "hit":
                             return True, [row_index, column_index - 1]
         return False, None
+
 
     def run_main_battle_computer_turn(self):
         self.computer_select_cell()
@@ -627,16 +645,12 @@ class Main:
                             self.game_setup_running = False
                             self.game_open = False
                             self.computer_turn = False
-
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_SPACE:
-                        self.computer_turn = False
             
             self.update_main_battle_computer_turn(self.rotate_ship, self.selected_ship, self.mouse_position, self.player_grid, self.game_battle_running, self.computer_turn, self.missile_position_y, self.missile_on)
             self.draw_main_battle_computer_turn()
 
             self.game_ending_lose_check()
-            if self.player_ships_sunk == 5:
+            if self.player_ships_sunk == 5 and self.missile.rect.center[0] == self.missile_x_border:
                 self.game_ending_lose = True
                 self.game_lose_screen()
 
@@ -644,10 +658,27 @@ class Main:
                 self.reset()
 
             pg.display.update()
+
+            if self.missile_x_border != 0 and self.missile_on == False:
+                time.sleep(1)
+                self.computer_turn = False
+                self.missile_x_border = 0
+
             self.clock.tick(FPS)
 
+
     def update_main_battle_computer_turn(self, rotate_ship, selected_ship, mouse_position, player_grid, game_battle_running, computer_turn, missile_position_y, missile_on):
-        self.all_sprites_group.update(self.rotate_ship, self.selected_ship, self.mouse_position, self.player_grid, self.game_battle_running, self.computer_turn, self.missile_position_y, self.missile_on)
+        if self.missile.rect.center[0] == self.missile_x_border and self.missile_on:
+            self.missile_on = False
+            self.selected_cell_main_battle_computer_turn = None
+
+        self.all_sprites_group.update(self.rotate_ship, self.selected_ship, self.mouse_position, self.player_grid, self.game_battle_running, self.computer_turn, self.missile_position_y, self.missile_on, self.computer_grid, self.computer_ships_sunk)
+        
+        if self.selected_cell_main_battle_computer_turn:
+            self.missile_on = True
+            self.missile_x_border = self.selected_cell_main_battle_computer_turn[0] * CELL_SIZE + TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN + 1/2 * CELL_SIZE
+            self.missile_position_y = self.selected_cell_main_battle_computer_turn[1] * CELL_SIZE + TABLE_POSITION_Y + 1/2 * CELL_SIZE
+
 
     def draw_main_battle_computer_turn(self):
         self.main_battle_background_x += 0.5
@@ -657,7 +688,6 @@ class Main:
             self.main_battle_background_x = -self.main_battle_background.get_width()
         if self.main_battle_background_x_2 > self.main_battle_background.get_width():
             self.main_battle_background_x_2 = -self.main_battle_background.get_width()
-
         self.screen.blit(self.main_battle_background, (self.main_battle_background_x, 0))
         self.screen.blit(self.main_battle_background, (self.main_battle_background_x_2, 0))
 
@@ -667,13 +697,17 @@ class Main:
         self.loading_buttons_on_main_battle_computer_turn(self.screen, self.mouse_position, self.list_of_button_texts, self.buttons_size_x, self.buttons_size_y)
         self.all_sprites_group.draw(self.screen)
 
+
     def selected_cell_fill_main_battle_computer_turn(self, screen):
         for row_index, row in enumerate(self.computer_entered_grid):
             for column_index, column in enumerate(row):
-                if column == "hit":
+                if column == "hit" and ([column_index, row_index] != self.selected_cell_main_battle_computer_turn or (self.missile.rect.center[0] == self.missile_x_border and [column_index, row_index] == self.selected_cell_main_battle_computer_turn)):
                     pg.draw.rect(self.screen, RED, (column_index * CELL_SIZE + TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN, row_index * CELL_SIZE + TABLE_POSITION_Y, CELL_SIZE, CELL_SIZE))
-                elif column == "miss":
+                elif column == "miss" and ([column_index, row_index] != self.selected_cell_main_battle_computer_turn or (self.missile.rect.center[0] == self.missile_x_border and [column_index, row_index] == self.selected_cell_main_battle_computer_turn)):
                     pg.draw.rect(self.screen, GREY, (column_index * CELL_SIZE + TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN, row_index * CELL_SIZE + TABLE_POSITION_Y, CELL_SIZE, CELL_SIZE))
+                elif self.missile.rect.center[0] != self.missile_x_border and [column_index, row_index] == self.selected_cell_main_battle_computer_turn:
+                    pg.draw.rect(self.screen, YELLOW, (column_index * CELL_SIZE + TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN, row_index * CELL_SIZE + TABLE_POSITION_Y, CELL_SIZE, CELL_SIZE))
+
 
     def message_to_screen_main_battle_computer_turn(self, screen):
         line_font = pg.font.Font('freesansbold.ttf', 60)
@@ -690,11 +724,13 @@ class Main:
             else:
                 self.screen.blit(line_surface, (130, 380))
 
+
     def table_cell_draw_main_battle_computer_turn(self, screen):
         pg.draw.rect(self.screen, BLACK, (TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN, TABLE_POSITION_Y, TABLE_SIZE, TABLE_SIZE), 5)
         for i in range(1, 11):
             pg.draw.line(self.screen, BLACK, (TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN + i * CELL_SIZE, TABLE_POSITION_Y), (TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN + i * CELL_SIZE, TABLE_POSITION_Y + TABLE_SIZE), 5)
             pg.draw.line(self.screen, BLACK, (TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN, TABLE_POSITION_Y + i * CELL_SIZE), (TABLE_POSITION_X_MAIN_BATTLE_COMPUTER_TURN + TABLE_SIZE, TABLE_POSITION_Y + i * CELL_SIZE), 5)
+
 
     def loading_buttons_on_main_battle_computer_turn(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
         self.mouse_position = pg.mouse.get_pos()
@@ -736,16 +772,20 @@ class Main:
             pg.display.update()
             self.clock.tick(FPS)
 
+
     def draw_game_lose(self, screen):
         self.screen.blit(self.game_over_background, (0, 0))
         self.message_to_screen_game_lose(self.screen)
         self.loading_buttons_on_game_lose_screen(self.screen, self.mouse_position, self.list_of_button_texts, self.buttons_size_x, self.buttons_size_y)
-        
+
+
     def message_to_screen_game_lose(self, screen):
         pass
 
+
     def loading_buttons_on_game_lose_screen(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
         pass
+
 
     def game_win_screen(self):
         while self.game_ending_win:
@@ -761,16 +801,20 @@ class Main:
             pg.display.update()
             self.clock.tick(FPS)
 
+
     def draw_game_win(self, screen):
         self.screen.blit(self.game_win_background, (0, 0))
         self.message_to_screen_game_win(self.screen)
         self.loading_buttons_on_game_win_screen(self.screen, self.mouse_position, self.list_of_button_texts, self.buttons_size_x, self.buttons_size_y)
-        
+
+
     def message_to_screen_game_win(self, screen):
         pass
 
+
     def loading_buttons_on_game_win_screen(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
         pass
+
 
 if __name__ == "__main__":
     instance_of_Main = Main()
