@@ -1,8 +1,8 @@
 import sys
 from os import path
 import pygame as pg
-import time
 import random
+import time
 import pickle
 from Oceanic_Warfare_settings import *
 from Oceanic_Warfare_sprites import *
@@ -606,6 +606,31 @@ class Main:
         for row_index, row in enumerate(self.computer_entered_grid):
             for column_index, column in enumerate(row):
                 if column == "hit" and sum(ship_type.count(self.player_grid[row_index][column_index]) for ship_type in self.computer_entered_grid) > 0:
+                    if self.player_grid[row_index][column_index] in [1, 2, 3, 5]:
+                        row_check_index_right = 1
+                        if self.computer_entered_grid[row_check_index_right + row_index][column_index] == "hit":
+                            while row_check_index_right + row_index <= 10:
+                                if isinstance(self.computer_entered_grid[row_check_index_right + row_index][column_index], int):
+                                    return True, [row_check_index_right + row_index, column_index]
+                                elif self.computer_entered_grid[row_check_index_right + row_index][column_index] == "miss":
+                                    break                                
+                                row_check_index_right += 1
+
+                            if row_index - 1 >= 0 and isinstance(self.computer_entered_grid[row_index - 1][column_index], int):
+                                return True, [row_index - 1, column_index]
+
+                        column_check_index_up = 1
+                        if self.computer_entered_grid[row_index][column_index + column_check_index_up] == "hit":
+                            while column_check_index_up + column_index <= 10:
+                                if isinstance(self.computer_entered_grid[row_index][column_index + column_check_index_up], int):
+                                    return True, [row_index, column_index + column_check_index_up]
+                                elif self.computer_entered_grid[row_index][column_index + column_check_index_up] == "miss":
+                                    break
+                                column_check_index_up += 1
+
+                            if column_index - 1 >= 0 and isinstance(self.computer_entered_grid[row_index][column_index - 1], int):
+                                return True, [row_index, column_index - 1]
+
                     if row_index < 10:
                         if isinstance(self.computer_entered_grid[row_index + 1][column_index], int) and self.computer_entered_grid[row_index][column_index] == "hit":
                             return True, [row_index + 1, column_index]
