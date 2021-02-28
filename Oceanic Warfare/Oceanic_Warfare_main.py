@@ -608,7 +608,7 @@ class Main:
                 if column == "hit" and sum(ship_type.count(self.player_grid[row_index][column_index]) for ship_type in self.computer_entered_grid) > 0:
                     if self.player_grid[row_index][column_index] in [1, 2, 3, 5]:
                         row_check_index_right = 1
-                        if self.computer_entered_grid[row_check_index_right + row_index][column_index] == "hit":
+                        if row_index < 10 and self.computer_entered_grid[row_check_index_right + row_index][column_index] == "hit":
                             while row_check_index_right + row_index <= 10:
                                 if isinstance(self.computer_entered_grid[row_check_index_right + row_index][column_index], int):
                                     return True, [row_check_index_right + row_index, column_index]
@@ -616,11 +616,11 @@ class Main:
                                     break                                
                                 row_check_index_right += 1
 
-                            if row_index - 1 >= 0 and isinstance(self.computer_entered_grid[row_index - 1][column_index], int):
+                            if row_index > 0 and isinstance(self.computer_entered_grid[row_index - 1][column_index], int):
                                 return True, [row_index - 1, column_index]
 
                         column_check_index_up = 1
-                        if self.computer_entered_grid[row_index][column_index + column_check_index_up] == "hit":
+                        if column_index < 10 and self.computer_entered_grid[row_index][column_index + column_check_index_up] == "hit":
                             while column_check_index_up + column_index <= 10:
                                 if isinstance(self.computer_entered_grid[row_index][column_index + column_check_index_up], int):
                                     return True, [row_index, column_index + column_check_index_up]
@@ -628,7 +628,7 @@ class Main:
                                     break
                                 column_check_index_up += 1
 
-                            if column_index - 1 >= 0 and isinstance(self.computer_entered_grid[row_index][column_index - 1], int):
+                            if column_index > 0 and isinstance(self.computer_entered_grid[row_index][column_index - 1], int):
                                 return True, [row_index, column_index - 1]
 
                     if row_index < 10:
