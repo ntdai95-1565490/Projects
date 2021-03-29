@@ -100,12 +100,14 @@ class Main:
                         elif i == 5 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
                             self.game_open = False
 
+            
             self.instructions_screen_page()
             self.highscores_screen()
             self.run_main_game()
-            self.screen.blit(self.first_last_background, (0, 0))
-            self.initial_message_to_screen(self.screen)
-            self.loading_buttons_on_first_page(self.screen, self.mouse_position, self.list_of_button_texts)
+            if self.game_open:
+                self.screen.blit(self.first_last_background, (0, 0))
+                self.initial_message_to_screen(self.screen)
+                self.loading_buttons_on_first_page(self.screen, self.mouse_position, self.list_of_button_texts)
 
             pg.display.update()
             self.clock.tick(FPS)
@@ -148,14 +150,167 @@ class Main:
 
 
     def highscores_screen(self):
-        pass
+        try:
+            with open(".highscores.pickle", "rb") as p:
+                pickle_objects = pickle.load(p)
+            self.list_of_highscores = pickle_objects
+            self.list_of_highscores.sort(reverse = True, key = lambda x: x[1])
+        except EOFError:
+            self.list_of_highscores = []
+
+        while self.highscores_page:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.highscores_page = False
+                    self.game_open = False
+                
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    for i in range(4):
+                        if i == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
+                            self.list_of_highscores = []
+                            instance_of_PickleHighScore = PickleHighScore(self.list_of_highscores)
+                            instance_of_PickleHighScore.saving_highscore_pickle()
+                        elif i == 2 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
+                            self.highscores_page = False
+
+            self.screen.blit(self.first_last_background, (0, 0))
+            self.highscores_message_to_screen(self.screen)
+            self.loading_buttons_on_highscores_page(self.screen, self.mouse_position, self.list_of_button_texts, self.buttons_size_x, self.buttons_size_y)
+
+            if self.highscores_page == False and self.game_open:
+                self.reset()
+
+            pg.display.update()
+            self.clock.tick(FPS)
+
+    def highscores_message_to_screen(self, screen):
+        first_line_font = pg.font.Font('freesansbold.ttf', 50)
+        line_font = pg.font.Font('freesansbold.ttf', 40)
+        list_of_messages = ["TOP 10 HIGHSCORES!"]
+        for index, name_score in enumerate(self.list_of_highscores):
+            name_score_message = f"{index + 1}. {name_score[0]} --> {name_score[1]} points"
+            list_of_messages.append(name_score_message)
+        for index, message in enumerate(list_of_messages):
+            if index == 0:
+                line = first_line_font.render(message, True, BLACK)
+            else:
+                line = line_font.render(message, True, BLACK)
+            line_surface = pg.Surface(line.get_size())
+            if index % 2 == 0:
+                line_surface.fill(PINK)
+            else:
+                line_surface.fill(YELLOW)
+            line_surface.blit(line, (0, 0))
+            if index == 0:
+                self.screen.blit(line_surface, (240, 20))
+            else:
+                self.screen.blit(line_surface, (180, 60 + 50 * index))
+
+    def loading_buttons_on_highscores_page(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
+        self.mouse_position = pg.mouse.get_pos()
+        self.list_of_button_texts = ["DELETE", "ALL SCORES", "MAIN", "PAGE"]
+        self.list_of_button_positions_x = [210, 210, 510, 510]
+        self.list_of_button_positions_y = [665, 705, 665, 705]
+        self.buttons_size_x = 290
+        self.buttons_size_y = 110
+
+        # Button Texts
+        for i in range(4):
+            if i % 2 == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y: 
+                pg.draw.rect(self.screen, RED, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
+                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
+            elif i % 2 == 0: 
+                pg.draw.rect(self.screen, GREEN, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
+                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
+
+            font = pg.font.Font('freesansbold.ttf', 40)
+            text_font = font.render(self.list_of_button_texts[i], True, BLACK)
+            text_font_width = text_font.get_width()
+            text_font_height = text_font.get_height()
+            self.screen.blit(text_font, (self.list_of_button_positions_x[i] + (self.buttons_size_x - text_font_width) // 2, self.list_of_button_positions_y[i] + (self.buttons_size_y - text_font_height) // 4))
 
 
 ### INSTRUCTIONS PAGE ###
 
 
     def instructions_screen_page(self):
-        pass
+        while self.instruction_page:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.instruction_page = False
+                    self.game_open = False
+
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    for i in range(2):
+                        if i == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
+                            self.instruction_page = False
+
+            self.screen.blit(self.first_last_background, (0, 0))
+            self.instruction_message_to_screen(self.screen)
+            self.loading_buttons_on_instruction_page(self.screen, self.mouse_position, self.list_of_button_texts, self.buttons_size_x, self.buttons_size_y)
+
+            if self.instruction_page == False and self.game_open:
+                self.reset()
+
+            pg.display.update()
+            self.clock.tick(FPS)
+    
+    def instruction_message_to_screen(self, screen):
+        first_line_font = pg.font.Font('freesansbold.ttf', 50)
+        line_font = pg.font.Font('freesansbold.ttf', 30)
+        list_of_messages = ["Instructions!",
+        "To move around, you can use the up, down, left, and right arrows.",
+        "To shoot down enemies, press space. You can only shoot more",
+        "bullets if the previous bullet has already hit an enemy or has",
+        "disappeared from the screen. You can only shoot down airplanes",
+        "or headquarters (at the end). Each airplane needs to be shoot",
+        "down once. Each headquarter needs to be shoot down twice.",
+        "The number of lives remaining for each headquarter will be",
+        "shown by the number of mini-sized images above each of them.",
+        "If you run out of lives (indicated by the number of mini images on",
+        "the left upper corner of the screen during the game), you will lose",
+        "the game. In order to win, you need to shoot down all headquarters",
+        "at the end. You can only save your score if you win the game and",
+        "your score is among the top 10 highscores."]
+        for index, message in enumerate(list_of_messages):
+            if index == 0:
+                line = first_line_font.render(message, True, BLACK)
+            else:
+                line = line_font.render(message, True, BLACK)
+            line_surface = pg.Surface(line.get_size())
+            line_surface.fill(PINK)
+            line_surface.blit(line, (0, 0))
+            if index == 0:
+                self.screen.blit(line_surface, (350, 20))
+            elif index < 4:
+                self.screen.blit(line_surface, (20, 100 + 30 * index))
+            elif 4 <= index < 9:
+                self.screen.blit(line_surface, (20, 140 + 30 * index))    
+            else:
+                self.screen.blit(line_surface, (20, 180 + 30 * index))
+
+    def loading_buttons_on_instruction_page(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
+        self.mouse_position = pg.mouse.get_pos()
+        self.list_of_button_texts = ["MAIN", "PAGE"]
+        self.list_of_button_positions_x = [420, 420]
+        self.list_of_button_positions_y = [665, 705]
+        self.buttons_size_x = 170
+        self.buttons_size_y = 110
+
+        # Button Texts
+        for i in range(2):
+            if i % 2 == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y: 
+                pg.draw.rect(self.screen, RED, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
+                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
+            elif i % 2 == 0: 
+                pg.draw.rect(self.screen, GREEN, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
+                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
+
+            font = pg.font.Font('freesansbold.ttf', 40)
+            text_font = font.render(self.list_of_button_texts[i], True, BLACK)
+            text_font_width = text_font.get_width()
+            text_font_height = text_font.get_height()
+            self.screen.blit(text_font, (self.list_of_button_positions_x[i] + (self.buttons_size_x - text_font_width) // 2, self.list_of_button_positions_y[i] + (self.buttons_size_y - text_font_height) // 4))
 
 
 ### MAIN GAME SCREEN ###
@@ -227,11 +382,12 @@ class Main:
             self.draw_main_game()
 
             if all(headquarter.headquarter_life_point == 0 for headquarter in self.headquarter):
+                self.player.player_score += self.player.player_life_point * 15
                 self.game_ending_win = True
                 # self.game_win_sound.play()
                 self.game_win_screen()
 
-            if self.player.player_life_point == 0:
+            if self.player.player_life_point < 1:
                 self.game_ending_lose = True
                 # self.game_over_sound.play()
                 self.game_lose_screen()
@@ -497,7 +653,7 @@ class Main:
             "top 10 highscores. Therefore, your score",
             "cannot be saved. Try harder next time."])
         elif self.final_player_score_in_highscores == None:
-            list_of_messages.extend(["Your score has been saved!", "You can check it in the Highscores menu on the main page."])
+            list_of_messages.extend(["Your score has been saved!", "You can check it in the Highscores", "menu on the main page."])
 
         for index, message in enumerate(list_of_messages):
             if index == 0:
@@ -513,11 +669,11 @@ class Main:
                 line_surface.fill(BLACK)
             line_surface.blit(line, (0, 0))
             if index == 0:
-                self.screen.blit(line_surface, (400, 20))
+                self.screen.blit(line_surface, (250, 20))
             elif index == 1:
-                self.screen.blit(line_surface, (440, 160))
+                self.screen.blit(line_surface, (290, 160))
             elif self.final_player_score_in_highscores and index == 5:
-                self.screen.blit(line_surface, (480, 540))
+                self.screen.blit(line_surface, (290, 540))
             else:
                 self.screen.blit(line_surface, (20, 160 + index * 60))
 
@@ -525,14 +681,14 @@ class Main:
     def loading_buttons_on_game_win_screen(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
         self.mouse_position = pg.mouse.get_pos()
         self.list_of_button_texts = ["MAIN", "PAGE", "EXIT", "GAME"]
-        self.list_of_button_positions_x = [560, 560, 740, 740]
+        self.list_of_button_positions_x = [340, 340, 520, 520]
         self.list_of_button_positions_y = [665, 705, 665, 705]
         self.buttons_size_x = 170
         self.buttons_size_y = 110
 
         if self.final_player_score_in_highscores:
             self.list_of_button_texts.extend(["SAVE", "SCORE"])
-            self.list_of_button_positions_x.extend([1060, 1060])
+            self.list_of_button_positions_x.extend([780, 780])
             self.list_of_button_positions_y.extend([510, 550])
             # Button Texts
             for i in range(4, 6):

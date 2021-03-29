@@ -106,9 +106,10 @@ class Main:
             self.instructions_screen_page()
             self.highscores_screen()
             self.run_main_game()
-            self.screen.blit(self.first_last_background, (0, 0))
-            self.initial_message_to_screen(self.screen)
-            self.loading_buttons_on_first_page(self.screen, self.mouse_position, self.list_of_button_texts)
+            if self.game_open:
+                self.screen.blit(self.first_last_background, (0, 0))
+                self.initial_message_to_screen(self.screen)
+                self.loading_buttons_on_first_page(self.screen, self.mouse_position, self.list_of_button_texts)
 
             pg.display.update()
             self.clock.tick(FPS)
@@ -374,12 +375,12 @@ class Main:
             self.update_main_game(self.round_count)
             self.draw_main_game()
 
-            if self.octopus.octopus_life_point == 0:
+            if self.octopus.octopus_life_point < 1:
                 self.game_ending_win = True
                 self.game_win_sound.play()
                 self.game_win_screen()
 
-            if self.player.player_life_point == 0:
+            if self.player.player_life_point < 1:
                 self.game_ending_lose = True
                 self.game_over_sound.play()
                 self.game_lose_screen()

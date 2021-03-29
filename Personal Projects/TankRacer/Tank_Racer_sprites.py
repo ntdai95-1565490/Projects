@@ -136,7 +136,10 @@ class Airplane(pg.sprite.Sprite):
     def update(self, round_count):
         if (round_count == 4 or round_count == 8) and self.airplane_life_point > 0:
             if self.rect.x == -1000 and self.rect.y == -1000:
-                self.rect.x = random.randint(200, 655)
+                if self.i == 0:
+                    self.rect.x = random.randint(200, 425)
+                else:
+                    self.rect.x = random.randint(425, 655)
                 self.rect.y = 0
 
             self.rect.x += self.airplane_x_change
