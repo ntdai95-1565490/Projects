@@ -1,10 +1,14 @@
-# The program uses third-party musics and icons, which are credited to:
+# The program uses third-party icons, which are credited to:
 
-# http://opengameart.org/users/copyc4t http://www.freesound.org/people/copyc4t/ https://soundcloud.com/copyc4t
-# <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-# <div>Icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-# <div>Icons made by <a href="https://www.flaticon.com/authors/flat-icons" title="Flat Icons">Flat Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-# <div>Icons made by <a href="https://www.flaticon.com/authors/ultimatearm" title="ultimatearm">ultimatearm</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+# Icons made by <a href="https://www.flaticon.com/authors/creaticca-creative-agency" title="Creaticca Creative Agency">Creaticca Creative Agency</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="https://www.flaticon.com/free-icon/airplane_2646745?related_item_id=2646727&term=airplane%20military" title="ultimatearm">ultimatearm</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="https://www.flaticon.com/free-icon/missile_2809728?related_item_id=2762183&term=missile" title="smalllikeart">smalllikeart</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="https://www.flaticon.com/authors/nhor-phai" title="Nhor Phai">Nhor Phai</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="https://www.flaticon.com/authors/smalllikeart" title="smalllikeart">smalllikeart</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+# Icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
 # The creator of the following program does not own any of the icons used below. All of the copyrights of the icons below belongs to the 
 # creators mentioned above.
@@ -15,8 +19,8 @@ from os import path
 import pygame as pg
 import random
 import pickle
-from Horse_Racer_settings import *
-from Horse_Racer_sprites import *
+from Tank_Racer_settings import *
+from Tank_Racer_sprites import *
 
 
 class PickleHighScore:
@@ -32,17 +36,13 @@ class PickleHighScore:
 class Main:
     def __init__(self):
         pg.init()
-        pg.mixer.music.load(path.join(path.join(path.dirname(__file__), "Music"), "background_music.wav"))
-        pg.mixer.music.set_volume(0.4)
-        self.hit_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "hit.wav"))
-        self.arrow_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "arrow.wav"))
-        self.game_over_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "game_over.wav"))
-        self.game_win_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "game_win.wav"))
+        # pg.mixer.music.load(path.join(path.join(path.dirname(__file__), "Music"), "background_music.wav"))
+        # pg.mixer.music.set_volume(0.4)
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.first_last_background = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "first_last_background.png")).convert()
         self.main_game_background = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "background.png")).convert()
         pg.display.set_caption(TITLE)
-        self.icon = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "horse_icon.png")).convert()
+        self.icon = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "tank_icon.png")).convert()
         self.icon.set_colorkey(BLACK)
         pg.display.set_icon(self.icon)
         self.clock = pg.time.Clock()
@@ -62,7 +62,7 @@ class Main:
         self.buttons_size_x = None
         self.buttons_size_y = None
         self.mouse_position = None
-        self.round_count = -1
+        self.round_count = 0
         self.list_of_highscores = []
         self.final_player_score_in_highscores = None
         self.player_name = ""
@@ -70,11 +70,8 @@ class Main:
         self.is_sound_playing = True
 
 
-### GAME START SCREEN ###
-
-
     def game_start_screen(self):
-        pg.mixer.music.play(-1)
+        # pg.mixer.music.play(-1)
         while self.game_open:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -89,12 +86,12 @@ class Main:
                         elif i == 2 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
                             self.highscores_page = True
                         elif i == 3 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
-                            if self.is_music_playing:
+                            """ if self.is_music_playing:
                                 pg.mixer.music.stop()
                                 self.is_music_playing = False
                             else:
                                 pg.mixer.music.play(-1)
-                                self.is_music_playing = True
+                                self.is_music_playing = True """
                         elif i == 4 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
                             if self.is_sound_playing:
                                 self.is_sound_playing = False
@@ -118,16 +115,16 @@ class Main:
 
     def initial_message_to_screen(self, screen):
         line_font = pg.font.Font('freesansbold.ttf', 60)
-        line = line_font.render("Welcome to Horse Racer!", True, YELLOW)
+        line = line_font.render("Welcome to Tank Racer!", True, BLUE)
         line_surface = pg.Surface(line.get_size())
-        line_surface.fill(BLACK)
+        line_surface.fill(WHITE)
         line_surface.blit(line, (0, 0))
-        self.screen.blit(line_surface, (400, 150))
+        self.screen.blit(line_surface, (150, 100))
 
     def loading_buttons_on_first_page(self, screen, mouse_position, list_of_button_texts):
         self.mouse_position = pg.mouse.get_pos()
-        self.list_of_button_positions_x = [100, 575, 1050, 100, 575, 1050]
-        self.list_of_button_positions_y = [350, 350, 350, 550, 550, 550]
+        self.list_of_button_positions_x = [100, 550, 100, 100, 550, 550]
+        self.list_of_button_positions_y = [300, 300, 600, 450, 450, 600]
         self.buttons_size_x = 350
         self.buttons_size_y = 100
 
@@ -151,165 +148,14 @@ class Main:
 
 
     def highscores_screen(self):
-        try:
-            with open(".highscores.pickle", "rb") as p:
-                pickle_objects = pickle.load(p)
-            self.list_of_highscores = pickle_objects
-            self.list_of_highscores.sort(reverse = True, key = lambda x: x[1])
-        except EOFError:
-            self.list_of_highscores = []
-
-        while self.highscores_page:
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    self.highscores_page = False
-                    self.game_open = False
-                
-                if event.type == pg.MOUSEBUTTONDOWN:
-                    for i in range(4):
-                        if i == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
-                            self.list_of_highscores = []
-                            instance_of_PickleHighScore = PickleHighScore(self.list_of_highscores)
-                            instance_of_PickleHighScore.saving_highscore_pickle()
-                        elif i == 2 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
-                            self.highscores_page = False
-
-            self.screen.blit(self.first_last_background, (0, 0))
-            self.highscores_message_to_screen(self.screen)
-            self.loading_buttons_on_highscores_page(self.screen, self.mouse_position, self.list_of_button_texts, self.buttons_size_x, self.buttons_size_y)
-
-            if self.highscores_page == False and self.game_open:
-                self.reset()
-
-            pg.display.update()
-            self.clock.tick(FPS)
-
-    def highscores_message_to_screen(self, screen):
-        first_line_font = pg.font.Font('freesansbold.ttf', 60)
-        line_font = pg.font.Font('freesansbold.ttf', 40)
-        list_of_messages = ["TOP 10 HIGHSCORES!"]
-        for index, name_score in enumerate(self.list_of_highscores):
-            name_score_message = f"{index + 1}. {name_score[0]} --> {name_score[1]} points"
-            list_of_messages.append(name_score_message)
-        for index, message in enumerate(list_of_messages):
-            if index == 0:
-                line = first_line_font.render(message, True, BLACK)
-            else:
-                line = line_font.render(message, True, BLACK)
-            line_surface = pg.Surface(line.get_size())
-            line_surface.fill(PINK)
-            line_surface.blit(line, (0, 0))
-            if index == 0:
-                self.screen.blit(line_surface, (470, 20))
-            elif index < 6:
-                self.screen.blit(line_surface, (60, 60 + 100 * index))  
-            else:
-                self.screen.blit(line_surface, (800, 60 + 100 * (index - 5)))
-
-    def loading_buttons_on_highscores_page(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
-        self.mouse_position = pg.mouse.get_pos()
-        self.list_of_button_texts = ["DELETE", "ALL SCORES", "MAIN", "PAGE"]
-        self.list_of_button_positions_x = [450, 450, 750, 750]
-        self.list_of_button_positions_y = [665, 705, 665, 705]
-        self.buttons_size_x = 290
-        self.buttons_size_y = 110
-
-        # Button Texts
-        for i in range(4):
-            if i % 2 == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y: 
-                pg.draw.rect(self.screen, RED, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
-                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
-            elif i % 2 == 0: 
-                pg.draw.rect(self.screen, GREEN, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
-                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
-
-            font = pg.font.Font('freesansbold.ttf', 40)
-            text_font = font.render(self.list_of_button_texts[i], True, BLACK)
-            text_font_width = text_font.get_width()
-            text_font_height = text_font.get_height()
-            self.screen.blit(text_font, (self.list_of_button_positions_x[i] + (self.buttons_size_x - text_font_width) // 2, self.list_of_button_positions_y[i] + (self.buttons_size_y - text_font_height) // 4))
+        pass
 
 
 ### INSTRUCTIONS PAGE ###
 
 
     def instructions_screen_page(self):
-        while self.instruction_page:
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    self.instruction_page = False
-                    self.game_open = False
-
-                if event.type == pg.MOUSEBUTTONDOWN:
-                    for i in range(2):
-                        if i == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
-                            self.instruction_page = False
-
-            self.screen.blit(self.first_last_background, (0, 0))
-            self.instruction_message_to_screen(self.screen)
-            self.loading_buttons_on_instruction_page(self.screen, self.mouse_position, self.list_of_button_texts, self.buttons_size_x, self.buttons_size_y)
-
-            if self.instruction_page == False and self.game_open:
-                self.reset()
-
-            pg.display.update()
-            self.clock.tick(FPS)
-    
-    def instruction_message_to_screen(self, screen):
-        first_line_font = pg.font.Font('freesansbold.ttf', 50)
-        line_font = pg.font.Font('freesansbold.ttf', 30)
-        list_of_messages = ["Instructions!",
-        "To move around, you can use the up, left, and right arrows. Note that you can only move around",
-        "when you are on the ground. To shoot down enemies, press space. You can only shoot more arrows",
-        "if the previous arrow has already hit an enemy or has disappeared from the screen.",
-        "You can only shoot down bats, dragons, and the octopus (at the end). Each bat needs to be shoot",
-        "down once. Each dragon and the octopus (at the end) need to be shoot down five times. The number",
-        "of lives remaining for each dragon and the octopus (at the end) will be shown by the number of",
-        "mini images on the right upper corner of the screen during the game when either of the dragons or",
-        "the octopus appears.",
-        "If you run out of lives (indicated by the number of mini images on the left upper corner of the",
-        "screen during the game), you will lose the game. In order to win, you need to shoot down the octopus",
-        "at the end. For scoring, you will get 1 point for every fired arrow that shoots down an enemy.",
-        "You can only save your score if you win the game and your score is among the top 10 highscores."]
-        for index, message in enumerate(list_of_messages):
-            if index == 0:
-                line = first_line_font.render(message, True, BLACK)
-            else:
-                line = line_font.render(message, True, BLACK)
-            line_surface = pg.Surface(line.get_size())
-            line_surface.fill(PINK)
-            line_surface.blit(line, (0, 0))
-            if index == 0:
-                self.screen.blit(line_surface, (580, 20))
-            elif index < 4:
-                self.screen.blit(line_surface, (20, 100 + 30 * index))
-            elif 4 <= index < 9:
-                self.screen.blit(line_surface, (20, 140 + 30 * index))    
-            else:
-                self.screen.blit(line_surface, (20, 180 + 30 * index))
-
-    def loading_buttons_on_instruction_page(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
-        self.mouse_position = pg.mouse.get_pos()
-        self.list_of_button_texts = ["MAIN", "PAGE"]
-        self.list_of_button_positions_x = [650, 650]
-        self.list_of_button_positions_y = [665, 705]
-        self.buttons_size_x = 170
-        self.buttons_size_y = 110
-
-        # Button Texts
-        for i in range(2):
-            if i % 2 == 0 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y: 
-                pg.draw.rect(self.screen, RED, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
-                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
-            elif i % 2 == 0: 
-                pg.draw.rect(self.screen, GREEN, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y])
-                pg.draw.rect(self.screen, BLACK, [self.list_of_button_positions_x[i], self.list_of_button_positions_y[i], self.buttons_size_x, self.buttons_size_y], 5)
-
-            font = pg.font.Font('freesansbold.ttf', 40)
-            text_font = font.render(self.list_of_button_texts[i], True, BLACK)
-            text_font_width = text_font.get_width()
-            text_font_height = text_font.get_height()
-            self.screen.blit(text_font, (self.list_of_button_positions_x[i] + (self.buttons_size_x - text_font_width) // 2, self.list_of_button_positions_y[i] + (self.buttons_size_y - text_font_height) // 4))
+        pass
 
 
 ### MAIN GAME SCREEN ###
@@ -319,30 +165,36 @@ class Main:
         self.all_sprites_group = pg.sprite.Group()
         self.player = Player()
         self.all_sprites_group.add(self.player)
-        self.arrow = Arrow()
-        self.all_sprites_group.add(self.arrow)
-        self.fence = []
-        for i in range(3):
-            instance_of_Fence = Fence(i)
-            self.fence.append(instance_of_Fence)
-            self.all_sprites_group.add(instance_of_Fence)
-        self.bat = []
+        self.bullet = Bullet()
+        self.all_sprites_group.add(self.bullet)
+        self.landmine = []
+        for i in range(6):
+            instance_of_Landmine = Landmine(i)
+            self.landmine.append(instance_of_Landmine)
+            self.all_sprites_group.add(instance_of_Landmine)
+        self.medal = []
         for i in range(2):
-            instance_of_Bat = Bat(i)
-            self.bat.append(instance_of_Bat)
-            self.all_sprites_group.add(instance_of_Bat)
-        self.dragon = Dragon()
-        self.all_sprites_group.add(self.dragon)
-        self.fire = Fire()
-        self.all_sprites_group.add(self.fire)
-        self.octopus = Octopus()
-        self.all_sprites_group.add(self.octopus)
-        self.waterdrop = []
+            instance_of_Medal = Medal(i)
+            self.medal.append(instance_of_Medal)
+            self.all_sprites_group.add(instance_of_Medal)
+        self.airplane = []
+        for i in range(2):
+            instance_of_Airplane = Airplane(i)
+            self.airplane.append(instance_of_Airplane)
+            self.all_sprites_group.add(instance_of_Airplane)
+        self.bomb = []
+        for i in range(2):
+            instance_of_Bomb = Bomb(i)
+            self.bomb.append(instance_of_Bomb)
+            self.all_sprites_group.add(instance_of_Bomb)
+        self.headquarter = []
         for i in range(4):
-            instance_of_Waterdrop = Waterdrop(i)
-            self.waterdrop.append(instance_of_Waterdrop)
-            self.all_sprites_group.add(instance_of_Waterdrop)
-        
+            instance_of_Headquarter = Headquarter(i)
+            self.headquarter.append(instance_of_Headquarter)
+            self.all_sprites_group.add(instance_of_Headquarter)
+        self.rocket = Rocket()
+        self.all_sprites_group.add(self.rocket)
+
 
     def run_main_game(self):
         self.loading_sprites_main_game(self.screen)
@@ -354,171 +206,147 @@ class Main:
 
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_LEFT:
-                        self.player.player_move_horizontal = "LEFT"
+                        self.player.player_move = "LEFT"
                     if event.key == pg.K_RIGHT:
-                        self.player.player_move_horizontal = "RIGHT"
+                        self.player.player_move = "RIGHT"
                     if event.key == pg.K_UP:
-                        self.player.player_move_vertical = "UP"
+                        self.player.player_move = "UP"
+                    if event.key == pg.K_DOWN:
+                        self.player.player_move = "DOWN"
                     if event.key == pg.K_SPACE:
-                        if self.arrow.arrow_is_on == False:
-                            self.arrow.arrow_is_on = True
-                            self.arrow.rect.x = self.player.rect.x
-                            self.arrow.rect.y = self.player.rect.y
+                        if self.bullet.bullet_is_on == False:
+                            self.bullet.bullet_is_on = True
+                            self.bullet.rect.x = self.player.rect.x
+                            self.bullet.rect.y = self.player.rect.y
         
                 if event.type == pg.KEYUP:
-                    if event.key == pg.K_LEFT or event.key == pg.K_RIGHT:
-                        self.player.player_move_horizontal = None
-                    if event.key == pg.K_UP:
-                        self.player.player_move_vertical = None
+                    if event.key == pg.K_LEFT or event.key == pg.K_RIGHT or event.key == pg.K_UP or event.key == pg.K_DOWN:
+                        self.player.player_move = None
 
             self.update_main_game(self.round_count)
             self.draw_main_game()
 
-            if self.octopus.octopus_life_point == 0:
+            if all(headquarter.headquarter_life_point == 0 for headquarter in self.headquarter):
                 self.game_ending_win = True
-                self.game_win_sound.play()
+                # self.game_win_sound.play()
                 self.game_win_screen()
 
             if self.player.player_life_point == 0:
                 self.game_ending_lose = True
-                self.game_over_sound.play()
+                # self.game_over_sound.play()
                 self.game_lose_screen()
 
             pg.display.update()
             self.clock.tick(FPS)
 
     def update_main_game(self, round_count):
-        if self.round_count != 2 and self.round_count != 8  and self.round_count != 12 and all(fence.rect.x <= -400 for fence in self.fence) and all(bat.rect.x <= -400 for bat in self.bat):
+        if self.round_count != 4 and self.round_count != 8  and self.round_count != 12:
+            for medal in self.medal:
+                if medal.rect.y == 800:
+                    self.round_count += 1
+        elif self.round_count == 4 and all(airplane.rect.x == -1000 and airplane.rect.y == -1000 for airplane in self.airplane):
+            for airplane in self.airplane:
+                airplane.airplane_life_point = 1
             self.round_count += 1
-            for fence in self.fence:
-                fence.fence_appear = True
-            for bat in self.bat:
-                bat.bat_appear = True
-        elif self.round_count != 2 and self.round_count != 8 and self.round_count != 12:
-            for fence in self.fence:
-                fence.fence_appear = False
-            for bat in self.bat:
-                bat.bat_appear = False
-        elif self.round_count == 12 and all(waterdrop.rect.y >= 800 for waterdrop in self.waterdrop):
-            for waterdrop in self.waterdrop:
-                waterdrop.waterdrop_appear = True
-        elif self.round_count == 12:
-            for waterdrop in self.waterdrop:
-                waterdrop.waterdrop_appear = False
+        elif self.round_count == 8 and all(airplane.rect.x == -1000 and airplane.rect.y == -1000 for airplane in self.airplane):
+            for airplane in self.airplane:
+                airplane.airplane_life_point = 1
+            self.round_count += 1
         
         self.collision_detection()
-        if self.dragon.dragon_life_point == 0:
-            self.round_count += 1
-            self.dragon.dragon_life_point = 5
-
         self.all_sprites_group.update(self.round_count)
 
     def collision_detection(self):
-        for bat in self.bat:
-            if pg.sprite.collide_mask(self.player, bat):
-                if self.is_sound_playing:
-                    self.hit_sound.play()
-                bat.rect.x = -1000
-                bat.bat_appear = False
+        for landmine in self.landmine:
+            if pg.sprite.collide_mask(self.player, landmine):
+                """ if self.is_sound_playing:
+                    self.hit_sound.play() """
+                landmine.rect.x -= 1000
                 self.player.player_life_point -= 1
+                self.player.rect.x = random.choice([200, 350, 500, 650])
+                self.player.rect.y = 630
         
-        for fence in self.fence:
-            if pg.sprite.collide_mask(self.player, fence):
-                if self.is_sound_playing:
-                    self.hit_sound.play()
-                fence.rect.x = -1000
-                fence.fence_appear = False
-                self.player.player_life_point -= 1
-
-        if pg.sprite.collide_mask(self.player, self.dragon):
-            if self.is_sound_playing:
-                self.hit_sound.play()
-            self.player.rect.x = 100
-            self.player.rect.y = 500
-            self.player.player_life_point -= 1
-
-        if pg.sprite.collide_mask(self.player, self.fire):
-            if self.is_sound_playing:
-                self.hit_sound.play()
-            self.fire.rect.x = -1000
-            self.player.player_life_point -= 1
-
-        if pg.sprite.collide_mask(self.player, self.octopus):
-            if self.is_sound_playing:
-                self.hit_sound.play()
-            self.player.rect.x = 100
-            self.player.rect.y = 500
-            self.player.player_life_point -= 1
-
-        for waterdrop in self.waterdrop:
-            if pg.sprite.collide_mask(self.player, waterdrop):
-                if self.is_sound_playing:
-                    self.hit_sound.play()
-                waterdrop.rect.y = 1000
-                waterdrop.waterdrop_appear = False
-                self.player.player_life_point -= 1
-
-        for bat in self.bat:
-            if pg.sprite.collide_mask(self.arrow, bat):
-                if self.is_sound_playing:
-                    self.arrow_sound.play()
-                self.arrow.arrow_is_on = False
-                bat.rect.x = -1000
-                bat.bat_appear = False
+        for medal in self.medal:
+            if pg.sprite.collide_mask(self.player, medal):
+                """ if self.is_sound_playing:
+                    self.hit_sound.play() """
                 self.player.player_score += 1
 
-        if pg.sprite.collide_mask(self.arrow, self.dragon):
-            if self.is_sound_playing:
-                self.arrow_sound.play()
-            self.arrow.arrow_is_on = False
-            self.dragon.dragon_life_point -= 1
-            self.player.player_score += 1
+        for airplane in self.airplane:
+            if pg.sprite.collide_mask(self.player, airplane):
+                """ if self.is_sound_playing:
+                    self.hit_sound.play() """
+                self.player.player_life_point -= 1
+                self.player.rect.x = random.choice([200, 350, 500, 650])
+                self.player.rect.y = 630
 
-        if pg.sprite.collide_mask(self.arrow, self.octopus):
-            if self.is_sound_playing:
-                self.arrow_sound.play()
-            self.arrow.arrow_is_on = False
-            self.octopus.octopus_life_point -= 1
-            self.player.player_score += 1
+        for bomb in self.bomb:
+            if pg.sprite.collide_mask(self.player, bomb):
+                """ if self.is_sound_playing:
+                    self.hit_sound.play() """
+                bomb.rect.x -= 1000
+                self.player.player_life_point -= 1
+                self.player.rect.x = random.choice([200, 350, 500, 650])
+                self.player.rect.y = 630
+
+        for headquarter in self.headquarter:
+            if pg.sprite.collide_mask(self.player, headquarter):
+                """ if self.is_sound_playing:
+                    self.hit_sound.play() """
+                self.player.player_life_point -= 1
+                self.player.rect.x = random.choice([200, 350, 500, 650])
+                self.player.rect.y = 630
+
+        if pg.sprite.collide_mask(self.player, self.rocket):
+            """ if self.is_sound_playing:
+                    self.hit_sound.play() """
+            self.rocket.rect.x = -1000
+            self.rocket.rect.y = -1000
+            self.player.player_life_point -= 1
+            self.player.rect.x = random.choice([200, 350, 500, 650])
+            self.player.rect.y = 630
+
+        for airplane in self.airplane:
+            if pg.sprite.collide_mask(self.bullet, airplane):
+                """ if self.is_sound_playing:
+                    self.explosion_sound.play() """
+                self.bullet.bullet_is_on = False
+                self.player.player_score += 10
+                airplane.airplane_life_point -= 1
+
+        for headquarter in self.headquarter:
+            if pg.sprite.collide_mask(self.bullet, headquarter):
+                """ if self.is_sound_playing:
+                    self.hit_sound.play() """
+                self.bullet.bullet_is_on = False
+                self.player.player_score += 5
+                headquarter.headquarter_life_point -= 1
 
     def draw_main_game(self):
         self.screen.blit(self.main_game_background, (0, 0))
         self.message_to_main_game_screen(self.screen)
         self.player_lives_to_main_sreen (self.screen)
-        if self.round_count == 2 or self.round_count == 8:
-            self.dragon_lives_to_main_screen(self.screen)
-        elif self.round_count == 12:
-            self.octopus_lives_to_main_screen(self.screen)
         self.all_sprites_group.draw(self.screen)
 
     def message_to_main_game_screen(self, screen):
         line_font = pg.font.Font('freesansbold.ttf', 40)
-        line = line_font.render(f"Score: {self.player.player_score}", True, YELLOW)
-        line_surface = pg.Surface(line.get_size())
-        line_surface.fill(BLACK)
-        line_surface.blit(line, (0, 0))
-        self.screen.blit(line_surface, (10, 80))
+        list_of_messages = ["Health:", "Score:", f"{self.player.player_score}"]
+        for i, message in enumerate(list_of_messages):
+            line = line_font.render(message, True, YELLOW)
+            line_surface = pg.Surface(line.get_size())
+            line_surface.fill(BLACK)
+            line_surface.blit(line, (0, 0))
+            if i == 0:
+                self.screen.blit(line_surface, (10, 10))
+            else:
+                self.screen.blit(line_surface, (820 + i * 30, -40 + i * 50))
 
     def player_lives_to_main_sreen(self, screen):
         for i in range(self.player.player_life_point):
             player_mini_image_rect = self.player.mini_image.get_rect()
-            player_mini_image_rect.x = 10 + 70 * i
-            player_mini_image_rect.y = 10
+            player_mini_image_rect.x = 70 * i
+            player_mini_image_rect.y = 60
             self.screen.blit(self.player.mini_image, player_mini_image_rect)
-
-    def dragon_lives_to_main_screen(self, screen):
-        for i in range(self.dragon.dragon_life_point):
-            dragon_mini_image_rect = self.dragon.mini_image.get_rect()
-            dragon_mini_image_rect.x = SCREEN_WIDTH - 80 - 70 * i
-            dragon_mini_image_rect.y = 10
-            self.screen.blit(self.dragon.mini_image, dragon_mini_image_rect)
-
-    def octopus_lives_to_main_screen(self, screen):
-        for i in range(self.octopus.octopus_life_point):
-            octopus_mini_image_rect = self.octopus.mini_image.get_rect()
-            octopus_mini_image_rect.x = SCREEN_WIDTH - 80 - 70 * i
-            octopus_mini_image_rect.y = 10
-            self.screen.blit(self.octopus.mini_image, octopus_mini_image_rect)
 
 
 ### GAME ENDING SCREENS ###
@@ -557,7 +385,7 @@ class Main:
 
 
     def message_to_screen_game_lose(self, screen):
-        line_font = pg.font.Font('freesansbold.ttf', 60)
+        line_font = pg.font.Font('freesansbold.ttf', 50)
         list_of_messages = ["GAME OVER!", f"Your score is {self.player.player_score} points.", "Try harder next time."]
         for index, message in enumerate(list_of_messages):
             line = line_font.render(message, True, YELLOW)
@@ -565,17 +393,17 @@ class Main:
             line_surface.fill(BLACK)
             line_surface.blit(line, (0, 0))
             if index == 0:
-                self.screen.blit(line_surface, (540, 20))
+                self.screen.blit(line_surface, (350, 20))
             elif index == 1:
-                self.screen.blit(line_surface, (390, 250))
+                self.screen.blit(line_surface, (220, 250))
             else:
-                self.screen.blit(line_surface, (440, 430))
+                self.screen.blit(line_surface, (250, 430))
 
 
     def loading_buttons_on_game_lose_screen(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
         self.mouse_position = pg.mouse.get_pos()
         self.list_of_button_texts = ["MAIN", "PAGE", "EXIT", "GAME"]
-        self.list_of_button_positions_x = [560, 560, 740, 740]
+        self.list_of_button_positions_x = [340, 340, 520, 520]
         self.list_of_button_positions_y = [665, 705, 665, 705]
         self.buttons_size_x = 170
         self.buttons_size_y = 110
@@ -656,8 +484,8 @@ class Main:
 
 
     def message_to_screen_game_win(self, screen):
-        first_line_font = pg.font.Font('freesansbold.ttf', 60)
-        line_font = pg.font.Font('freesansbold.ttf', 50)
+        first_line_font = pg.font.Font('freesansbold.ttf', 50)
+        line_font = pg.font.Font('freesansbold.ttf', 40)
         list_of_messages = ["CONGRATULATIONS!", f"Your score is {self.player.player_score} points."]
         if self.final_player_score_in_highscores:
             list_of_messages.extend(["Your score is in the top 10 highscores.",

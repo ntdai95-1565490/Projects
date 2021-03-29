@@ -56,15 +56,15 @@ class Fence(pg.sprite.Sprite):
         self.fence_appear = False
 
     def update(self, round_count):
-        if round_count == 2 or round_count == 8 or round_count == 10:
+        if round_count == 2 or round_count == 8 or round_count == 12:
             self.rect.x = -1000
             self.fence_appear = False
-        elif self.i == 0 and self.fence_appear and round_count != 2 and round_count != 8 and round_count != 10:
+        elif self.i == 0 and self.fence_appear and round_count != 2 and round_count != 8 and round_count != 12:
             self.rect.x = random.randint(1500, 1800)
             self.rect.x += self.fence_x_change
-        elif self.i == 0 and self.fence_appear == False and round_count != 2 and round_count != 8 and round_count != 10:
+        elif self.i == 0 and self.fence_appear == False and round_count != 2 and round_count != 8 and round_count != 12:
             self.rect.x += self.fence_x_change
-        elif self.fence_appear and round_count != 2 and round_count != 8 and round_count != 10:
+        elif self.fence_appear and round_count != 2 and round_count != 8 and round_count != 12:
             if random.choice([True, False]):
                 self.rect.x = random.randint(1500, 1800)
                 self.rect.x += self.fence_x_change
@@ -85,16 +85,16 @@ class Bat(pg.sprite.Sprite):
         self.bat_appear = False
 
     def update(self, round_count):
-        if round_count == 2 or round_count == 8 or round_count == 10:
+        if round_count == 2 or round_count == 8 or round_count == 12:
             self.rect.x = -1000
             self.bat_appear = False
-        elif self.i == 0 and self.bat_appear and round_count != 2 and round_count != 8 and round_count != 10:
+        elif self.i == 0 and self.bat_appear and round_count != 2 and round_count != 8 and round_count != 12:
             self.rect.x = random.randint(1500, 1800)
             self.rect.y = random.randint(100, 550)
             self.rect.x += self.bat_x_change
-        elif self.i == 0 and self.bat_appear == False and round_count != 2 and round_count != 8 and round_count != 10:
+        elif self.i == 0 and self.bat_appear == False and round_count != 2 and round_count != 8 and round_count != 12:
             self.rect.x += self.bat_x_change
-        elif self.bat_appear and round_count != 2 and round_count != 8 and round_count != 10:
+        elif self.bat_appear and round_count != 2 and round_count != 8 and round_count != 12:
             if random.choice([True, False]):
                 self.rect.x = random.randint(1500, 1800)
                 self.rect.y = random.randint(100, 550)
@@ -199,7 +199,7 @@ class Octopus(pg.sprite.Sprite):
         self.octopus_life_point = 5
 
     def update(self, round_count):
-        if round_count == 10:
+        if round_count == 12:
             if self.rect.x == -1000:
                 self.rect.x = 1200
                 self.rect.y = random.randint(100, 500)
@@ -227,17 +227,17 @@ class Waterdrop(pg.sprite.Sprite):
         self.waterdrop_appear = False
 
     def update(self, round_count):
-        if round_count != 10:
+        if round_count != 12:
             self.waterdrop_appear = False
             self.rect.x = -1000
             self.rect.y = 1000
-        elif (self.i == 0 or self.i == 1) and self.waterdrop_appear and round_count == 10:
+        elif (self.i == 0 or self.i == 1) and self.waterdrop_appear and round_count == 12:
             self.rect.x = random.randint(0, 1300)
             self.rect.y = 0
             self.rect.y += self.waterdrop_y_change
-        elif (self.i == 0 or self.i == 1) and self.waterdrop_appear == False and round_count == 10:
+        elif (self.i == 0 or self.i == 1) and self.waterdrop_appear == False and round_count == 12:
             self.rect.y += self.waterdrop_y_change
-        elif self.waterdrop_appear and round_count == 10:
+        elif self.waterdrop_appear and round_count == 12:
             if random.choice([True, False]):
                 self.rect.x = random.randint(0, 1300)
                 self.rect.y = 0
