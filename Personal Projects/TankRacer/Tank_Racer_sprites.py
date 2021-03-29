@@ -8,7 +8,6 @@ class Player(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "tank.png")).convert_alpha()
-        self.mini_image = pg.transform.scale(self.image, (70, 70))
         self.mask = pg.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = 200
@@ -187,7 +186,6 @@ class Headquarter(pg.sprite.Sprite):
         super().__init__()
         self.i = i
         self.image = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "headquarter.png")).convert_alpha()
-        self.mini_image = pg.transform.scale(self.image, (70, 70))
         self.mask = pg.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = -1000
@@ -198,7 +196,7 @@ class Headquarter(pg.sprite.Sprite):
         if round_count == 12 and self.headquarter_life_point > 0:
             if self.rect.x == -1000 and self.rect.y == -1000:
                 self.rect.x = 200 + self.i * 150
-                self.rect.y = 0
+                self.rect.y = 30
         else:
             self.rect.x = -1000
             self.rect.y = -1000

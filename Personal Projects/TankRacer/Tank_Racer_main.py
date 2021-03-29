@@ -36,8 +36,12 @@ class PickleHighScore:
 class Main:
     def __init__(self):
         pg.init()
-        # pg.mixer.music.load(path.join(path.join(path.dirname(__file__), "Music"), "background_music.wav"))
-        # pg.mixer.music.set_volume(0.4)
+        pg.mixer.music.load(path.join(path.join(path.dirname(__file__), "Music"), "background_music.wav"))
+        pg.mixer.music.set_volume(0.2)
+        self.hit_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "hit.wav"))
+        self.explosion_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "bullet.wav"))
+        self.game_over_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "game_over.wav"))
+        self.game_win_sound = pg.mixer.Sound(path.join(path.join(path.dirname(__file__), "Music"), "game_win.wav"))
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.first_last_background = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "first_last_background.png")).convert()
         self.main_game_background = pg.image.load(path.join(path.join(path.dirname(__file__), "Images"), "background.png")).convert()
@@ -71,7 +75,7 @@ class Main:
 
 
     def game_start_screen(self):
-        # pg.mixer.music.play(-1)
+        pg.mixer.music.play(-1)
         while self.game_open:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -86,12 +90,12 @@ class Main:
                         elif i == 2 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
                             self.highscores_page = True
                         elif i == 3 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
-                            """ if self.is_music_playing:
+                            if self.is_music_playing:
                                 pg.mixer.music.stop()
                                 self.is_music_playing = False
                             else:
                                 pg.mixer.music.play(-1)
-                                self.is_music_playing = True """
+                                self.is_music_playing = True
                         elif i == 4 and self.list_of_button_positions_x[i] <= self.mouse_position[0] <= self.list_of_button_positions_x[i] + self.buttons_size_x and self.list_of_button_positions_y[i] <= self.mouse_position[1] <= self.list_of_button_positions_y[i] + self.buttons_size_y:
                             if self.is_sound_playing:
                                 self.is_sound_playing = False
@@ -115,6 +119,7 @@ class Main:
         pg.quit()
         sys.exit()
 
+
     def initial_message_to_screen(self, screen):
         line_font = pg.font.Font('freesansbold.ttf', 60)
         line = line_font.render("Welcome to Tank Racer!", True, BLUE)
@@ -122,6 +127,7 @@ class Main:
         line_surface.fill(WHITE)
         line_surface.blit(line, (0, 0))
         self.screen.blit(line_surface, (150, 100))
+
 
     def loading_buttons_on_first_page(self, screen, mouse_position, list_of_button_texts):
         self.mouse_position = pg.mouse.get_pos()
@@ -183,6 +189,7 @@ class Main:
             pg.display.update()
             self.clock.tick(FPS)
 
+
     def highscores_message_to_screen(self, screen):
         first_line_font = pg.font.Font('freesansbold.ttf', 50)
         line_font = pg.font.Font('freesansbold.ttf', 40)
@@ -205,6 +212,7 @@ class Main:
                 self.screen.blit(line_surface, (240, 20))
             else:
                 self.screen.blit(line_surface, (180, 60 + 50 * index))
+
 
     def loading_buttons_on_highscores_page(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
         self.mouse_position = pg.mouse.get_pos()
@@ -255,6 +263,7 @@ class Main:
             pg.display.update()
             self.clock.tick(FPS)
     
+
     def instruction_message_to_screen(self, screen):
         first_line_font = pg.font.Font('freesansbold.ttf', 50)
         line_font = pg.font.Font('freesansbold.ttf', 30)
@@ -266,8 +275,8 @@ class Main:
         "or headquarters (at the end). Each airplane needs to be shoot",
         "down once. Each headquarter needs to be shoot down twice.",
         "The number of lives remaining for each headquarter will be",
-        "shown by the number of mini-sized images above each of them.",
-        "If you run out of lives (indicated by the number of mini images on",
+        "shown by the length of health bars above each of them.",
+        "If you run out of lives (indicated by the length of health bar on",
         "the left upper corner of the screen during the game), you will lose",
         "the game. In order to win, you need to shoot down all headquarters",
         "at the end. You can only save your score if you win the game and",
@@ -288,6 +297,7 @@ class Main:
                 self.screen.blit(line_surface, (20, 140 + 30 * index))    
             else:
                 self.screen.blit(line_surface, (20, 180 + 30 * index))
+
 
     def loading_buttons_on_instruction_page(self, screen, mouse_position, list_of_button_texts, buttons_size_x, buttons_size_y):
         self.mouse_position = pg.mouse.get_pos()
@@ -384,16 +394,17 @@ class Main:
             if all(headquarter.headquarter_life_point == 0 for headquarter in self.headquarter):
                 self.player.player_score += self.player.player_life_point * 15
                 self.game_ending_win = True
-                # self.game_win_sound.play()
+                self.game_win_sound.play()
                 self.game_win_screen()
 
             if self.player.player_life_point < 1:
                 self.game_ending_lose = True
-                # self.game_over_sound.play()
+                self.game_over_sound.play()
                 self.game_lose_screen()
 
             pg.display.update()
             self.clock.tick(FPS)
+
 
     def update_main_game(self, round_count):
         if self.round_count != 4 and self.round_count != 8  and self.round_count != 12:
@@ -412,11 +423,12 @@ class Main:
         self.collision_detection()
         self.all_sprites_group.update(self.round_count)
 
+
     def collision_detection(self):
         for landmine in self.landmine:
             if pg.sprite.collide_mask(self.player, landmine):
-                """ if self.is_sound_playing:
-                    self.hit_sound.play() """
+                if self.is_sound_playing:
+                    self.hit_sound.play()
                 landmine.rect.x -= 1000
                 self.player.player_life_point -= 1
                 self.player.rect.x = random.choice([200, 350, 500, 650])
@@ -424,22 +436,20 @@ class Main:
         
         for medal in self.medal:
             if pg.sprite.collide_mask(self.player, medal):
-                """ if self.is_sound_playing:
-                    self.hit_sound.play() """
                 self.player.player_score += 1
 
         for airplane in self.airplane:
             if pg.sprite.collide_mask(self.player, airplane):
-                """ if self.is_sound_playing:
-                    self.hit_sound.play() """
+                if self.is_sound_playing:
+                    self.hit_sound.play()
                 self.player.player_life_point -= 1
                 self.player.rect.x = random.choice([200, 350, 500, 650])
                 self.player.rect.y = 630
 
         for bomb in self.bomb:
             if pg.sprite.collide_mask(self.player, bomb):
-                """ if self.is_sound_playing:
-                    self.hit_sound.play() """
+                if self.is_sound_playing:
+                    self.hit_sound.play()
                 bomb.rect.x -= 1000
                 self.player.player_life_point -= 1
                 self.player.rect.x = random.choice([200, 350, 500, 650])
@@ -447,15 +457,15 @@ class Main:
 
         for headquarter in self.headquarter:
             if pg.sprite.collide_mask(self.player, headquarter):
-                """ if self.is_sound_playing:
-                    self.hit_sound.play() """
+                if self.is_sound_playing:
+                    self.hit_sound.play()
                 self.player.player_life_point -= 1
                 self.player.rect.x = random.choice([200, 350, 500, 650])
                 self.player.rect.y = 630
 
         if pg.sprite.collide_mask(self.player, self.rocket):
-            """ if self.is_sound_playing:
-                    self.hit_sound.play() """
+            if self.is_sound_playing:
+                self.hit_sound.play()
             self.rocket.rect.x = -1000
             self.rocket.rect.y = -1000
             self.player.player_life_point -= 1
@@ -464,25 +474,26 @@ class Main:
 
         for airplane in self.airplane:
             if pg.sprite.collide_mask(self.bullet, airplane):
-                """ if self.is_sound_playing:
-                    self.explosion_sound.play() """
+                if self.is_sound_playing:
+                    self.explosion_sound.play()
                 self.bullet.bullet_is_on = False
                 self.player.player_score += 10
                 airplane.airplane_life_point -= 1
 
         for headquarter in self.headquarter:
             if pg.sprite.collide_mask(self.bullet, headquarter):
-                """ if self.is_sound_playing:
-                    self.hit_sound.play() """
+                if self.is_sound_playing:
+                    self.explosion_sound.play()
                 self.bullet.bullet_is_on = False
                 self.player.player_score += 5
                 headquarter.headquarter_life_point -= 1
 
+
     def draw_main_game(self):
         self.screen.blit(self.main_game_background, (0, 0))
         self.message_to_main_game_screen(self.screen)
-        self.player_lives_to_main_sreen (self.screen)
         self.all_sprites_group.draw(self.screen)
+
 
     def message_to_main_game_screen(self, screen):
         line_font = pg.font.Font('freesansbold.ttf', 40)
@@ -497,12 +508,31 @@ class Main:
             else:
                 self.screen.blit(line_surface, (820 + i * 30, -40 + i * 50))
 
-    def player_lives_to_main_sreen(self, screen):
-        for i in range(self.player.player_life_point):
-            player_mini_image_rect = self.player.mini_image.get_rect()
-            player_mini_image_rect.x = 70 * i
-            player_mini_image_rect.y = 60
-            self.screen.blit(self.player.mini_image, player_mini_image_rect)
+        self.draw_health_bar_player(self.screen)
+        if self.round_count == 12:
+            self.draw_health_bar_headquarter(self.screen)
+
+
+    def draw_health_bar_player(self, screen):
+        BAR_LENGTH = 140
+        BAR_HEIGHT = 30
+        fill = (self.player.player_life_point / 3) * BAR_LENGTH
+        outline_rect = pg.Rect(10, 60, BAR_LENGTH, BAR_HEIGHT)
+        fill_rect = pg.Rect(10, 60, fill, BAR_HEIGHT)
+        pg.draw.rect(self.screen, GREEN, fill_rect)
+        pg.draw.rect(self.screen, BLACK, outline_rect, 5)
+
+
+    def draw_health_bar_headquarter(self, screen):
+        for headquarter in self.headquarter:
+            if headquarter.headquarter_life_point > 0:
+                BAR_LENGTH = 120
+                BAR_HEIGHT = 20
+                fill = (headquarter.headquarter_life_point / 2) * BAR_LENGTH
+                outline_rect = pg.Rect(215 + headquarter.i * 150, 10, BAR_LENGTH, BAR_HEIGHT)
+                fill_rect = pg.Rect(215 + headquarter.i * 150, 10, fill, BAR_HEIGHT)
+                pg.draw.rect(self.screen, PINK, fill_rect)
+                pg.draw.rect(self.screen, BLACK, outline_rect, 5)
 
 
 ### GAME ENDING SCREENS ###
