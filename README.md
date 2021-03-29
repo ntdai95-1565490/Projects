@@ -1,5 +1,5 @@
 # Projects
 
 Consist of:
-- Class projects/major homeworks
-- Personal projects for self-development
+- Class Projects/Major Homeworks
+- Personal Projects for self-development
