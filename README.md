@@ -1,4 +1,4 @@
-# Projects
+# Personal Projects
 
 Consist of:
 - Class Projects/Major Homeworks
